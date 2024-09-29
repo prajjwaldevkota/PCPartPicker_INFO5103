@@ -9,7 +9,7 @@ const getDBInstance = async () => {
   try {
     const client = new MongoClient(cfg.userAuth);
     const conn = await client.connect();
-    console.log("establishing new connection to authentication");
+    console.log("establishing new connection to PC PartPicker Database");
     db = conn.db(cfg.appdb);
   } catch (err) {
     console.log(err);

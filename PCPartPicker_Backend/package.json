@@ -18,5 +18,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.9.0",
     "pcpartpicker_backend": "file:"
+  },
+  "devDependencies": {
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^22.7.4"
   }
 }

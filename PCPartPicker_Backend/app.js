@@ -3,40 +3,30 @@ import * as cfg from "./config.js";
 import Fastify from "fastify";
 import mercurius from "mercurius";
 import cors from "@fastify/cors";
-import * as dbRtns from "./dbRoutines.js";
-// import { schema } from "./schema.js";
-// import { resolvers } from "./resolver.js";
-// import { setAuthorizationHeader } from "./sharedData.js";
+import { schema } from "./schema.js";
+import { resolvers } from "./resolver.js";
+import { setAuthorizationHeader } from "./sharedData.js";
 
 const app = Fastify();
-
-app.get("/", async (request, reply) => {
-  return "Hello, World!";
+app.register(cors, {});
+app.register(mercurius, {
+  schema,
+  resolvers,
+  context: (request, reply) => {
+    return { request, reply };
+  },
+  graphiql: true,
 });
 
-app.get("/testdb", async (request, reply) => {
-  try {
-    const db = await dbRtns.getDBInstance();
-    if (db) {
-      return "Connected to database";
-    } else {
-      return "Error connecting to database" + db;
-    }
-  } catch (err) {
-    console.log(err);
-  }
-});
+//commented out for testing purposes, will use for authentication purposes for registered users in the future
+// app.addHook("preHandler", async (request, reply) => {
+//   // Access the authorization header from the request
+//   const authorizationHeader = request.headers['authorization'];
 
-// app.register(cors, {});
-
-// app.register(mercurius, {
-// //   schema,
-// //   resolvers,
-//   context: (request, reply) => {
-//     return { request, reply };
-//   },
-// //   graphiql: true,
+//   // Store the authorization header using the shared data module
+//   setAuthorizationHeader(authorizationHeader);
 // });
+
 
 app.listen({ port: cfg.PORT }, (err, address) => {
   if (err) {

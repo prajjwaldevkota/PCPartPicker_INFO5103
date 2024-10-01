@@ -1,0 +1,154 @@
+<template>
+  <div class="signup-container">
+    <h1>Sign Up</h1>
+    <form @submit.prevent="handleSubmit">
+      <div class="form-group">
+        <input type="text" id="username" v-model="username" required placeholder="Username" />
+      </div>
+      <div class="form-group">
+        <input type="email" id="email" v-model="email" required placeholder="Email" />
+      </div>
+      <div class="form-group">
+        <input type="password" id="password" v-model="password" required placeholder="Password" />
+      </div>
+      <div class="button-container">
+        <button type="submit" class="submit-button">Sign Up</button>
+        <button type="button" class="back-button" @click="goBack">Back</button>
+      </div>
+    </form>
+    <p class="already-account">
+      Already have an account? <a href="/login" class="login-link">Login here</a>
+    </p>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'SignupPage',
+  data() {
+    return {
+      username: '',
+      email: '',
+      password: ''
+    }
+  },
+  methods: {
+    handleSubmit() {
+      const formData = {
+        username: this.username,
+        email: this.email,
+        password: this.password
+      }
+      console.log('Form submitted!', formData)
+      // Handle the form submission logic (e.g., API call) here
+    },
+    goBack() {
+      this.$router.push('/') // Navigate back to the previous page (change as needed)
+    }
+  }
+}
+</script>
+
+<style>
+.signup-container {
+  max-width: 400px;
+  padding: 75px 150px; /* Adjusted padding */
+  background: linear-gradient(135deg, #4b6cb7, #182848); /* Gradient background */
+  color: #fff; /* White text */
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  font-family: 'Arial', sans-serif; /* Use a modern font */
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+input {
+  width: 100%; /* Set to 100% for full width */
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #fff; /* Light input background */
+  color: #333; /* Dark text for inputs */
+  transition: border 0.3s; /* Transition for focus effect */
+}
+
+input::placeholder {
+  color: #888; /* Placeholder text color */
+}
+
+input:focus {
+  outline: none;
+  border: 2px solid #8e44ad; /* Focus border color */
+}
+
+.button-container {
+  display: flex; /* Flexbox for side-by-side buttons */
+  justify-content: space-between; /* Space between buttons */
+  margin-top: 10px; /* Spacing above the button container */
+}
+
+.submit-button {
+  flex: 1; /* Allow button to grow */
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #8e44ad; /* Purple button */
+  color: #fff; /* White text */
+  cursor: pointer;
+  font-size: 16px;
+  transition:
+    background-color 0.3s,
+    transform 0.3s; /* Button hover and transition effect */
+  margin-right: 5px; /* Space between buttons */
+}
+
+.submit-button:hover {
+  background-color: #732d91; /* Darker purple on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.submit-button:active {
+  transform: translateY(0); /* Reset lift on click */
+}
+
+.back-button {
+  flex: 1; /* Allow button to grow */
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #000; /* Black button */
+  color: #fff; /* White text */
+  cursor: pointer;
+  font-size: 16px;
+  transition:
+    background-color 0.3s,
+    transform 0.3s; /* Button hover and transition effect */
+}
+
+.back-button:hover {
+  background-color: #333; /* Darker black on hover */
+  transform: translateY(-2px); /* Subtle lift effect */
+}
+
+.back-button:active {
+  transform: translateY(0); /* Reset lift on click */
+}
+
+.already-account {
+  text-align: center;
+  margin-top: 20px;
+  color: #fff; /* White text */
+}
+
+.login-link {
+  color: #8e44ad; /* Link color */
+  text-decoration: underline;
+}
+</style>

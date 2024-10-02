@@ -33,14 +33,52 @@ export default {
     }
   },
   methods: {
-    handleSubmit() {
-      const formData = {
-        username: this.username,
-        email: this.email,
-        password: this.password
+    async handleSubmit() {
+      const signUpMutation = `
+      mutation($username:String, $email:String, $password:String) 
+      {signup(username:$username,email:$email,password:$password)
+        { 
+          user{
+              username,email
+            }
+          }
+        }
+    `
+
+      const URL = 'http://localhost:3045/graphql'
+      const variables = { username: this.username, email: this.email, password: this.password }
+
+      try {
+        // Send the login request to your GraphQL endpoint
+        const response = await fetch(URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            query: signUpMutation,
+            variables: variables
+          })
+        })
+
+        const result = await response.json()
+
+        if (result.errors) {
+          alert(`Sign Up failed: ${result.errors[0].message}`)
+        } else {
+          const { user, errorMessage } = result.data.signup
+
+          if (errorMessage) {
+            alert(`Signp error: ${errorMessage}`)
+          } else {
+            // Redirect or take further actions after successful login
+            alert(`Sign Up successful: ${user.username}`)
+          }
+        }
+      } catch (error) {
+        console.error('Signup error:', error)
+        alert('An Signup occurred during.')
       }
-      console.log('Form submitted!', formData)
-      // Handle the form submission logic (e.g., API call) here
     },
     goBack() {
       this.$router.push('/') // Navigate back to the previous page (change as needed)

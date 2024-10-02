@@ -3,7 +3,7 @@
     <h1>Login</h1>
     <form @submit.prevent="handleLogin" class="login-form">
       <div class="form-group">
-        <input type="text" id="username" v-model="username" required placeholder="Username" />
+        <input type="text" id="email" v-model="email" required placeholder="Email" />
       </div>
       <div class="form-group">
         <input type="password" id="password" v-model="password" required placeholder="Password" />
@@ -19,14 +19,61 @@ export default {
   name: 'LoginPage',
   data() {
     return {
-      username: '',
+      email: '',
       password: ''
     }
   },
   methods: {
-    handleLogin() {
-      // Handle login logic here
-      alert(`Logging in with username: ${this.username}`)
+    async handleLogin() {
+      const loginMutation = `
+        mutation($email: String!, $password: String!) {
+          login(email: $email, password: $password) {
+            token, user {
+              id, firstname
+            },
+            errorMessage
+          }
+        }
+      `
+      const URL = 'http://localhost:3045/graphql'
+      const variables = { email: this.email, password: this.password }
+
+      try {
+        // Send the login request to your GraphQL endpoint
+        const response = await fetch(URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            query: loginMutation,
+            variables: variables
+          })
+        })
+
+        const result = await response.json()
+
+        if (result.errors) {
+          alert(`Login failed: ${result.errors[0].message}`)
+        } else {
+          const { token, user, errorMessage } = result.data.login
+
+          if (errorMessage) {
+            alert(`Login error: ${errorMessage}`)
+          } else {
+            // Save token in session storage
+            sessionStorage.setItem('token', token)
+
+            // Redirect or take further actions after successful login
+            alert(`Welcome ${user.firstname}! You are logged in.`)
+            // For example, you can route the user to a dashboard:
+            // this.$router.push('/dashboard');
+          }
+        }
+      } catch (error) {
+        console.error('Login error:', error)
+        alert('An error occurred during login.')
+      }
     }
   }
 }

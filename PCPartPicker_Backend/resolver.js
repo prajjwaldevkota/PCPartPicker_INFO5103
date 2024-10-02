@@ -68,8 +68,7 @@ export const resolvers = {
       // }
       const hashedPassword = await bcrypt.hash(args.password, 10);
       const authData = {
-        firstname: args.firstname,
-        lastname: args.lastname,
+        username: args.username,
         email: args.email,
         password: hashedPassword, // Store hashed password
       };
@@ -77,7 +76,9 @@ export const resolvers = {
       let authResult = await dbRtns.addOne(db, "AUTH", authData);
 
       // Now, let's create a userprofile for the user
+      //returns bunch of null values for now since we are not using various fields keeping it as as for now. 
       const userProfileData = {
+        username: args.username,
         firstname: args.firstname,
         lastname: args.lastname,
         age: args.age,
@@ -94,7 +95,7 @@ export const resolvers = {
         userProfileData
       );
 
-      return { token, user: authData };
+      return {user: authData };
     } catch (error) {
       // Handle any errors that occur
       console.error("Error occurred in fetching results:", error);

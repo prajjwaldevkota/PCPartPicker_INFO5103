@@ -2,8 +2,7 @@ import * as cfg from "./config.js";
 import * as dbRtns from "./dbRoutines.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import fs from "fs";
-import path from "path";
+import { readDataFromJson } from "./utilities.js";
 
 export const resolvers = {
   signup: async (args) => {
@@ -123,17 +122,79 @@ export const resolvers = {
   },
   getCpus: async () => {
     try {
-      const cpuFilePath = path.resolve("json/json/cpu.json");
-      const cpuData = fs.readFileSync(cpuFilePath, "utf-8");
-      // Parse the file content to JSON
-      const cpus = JSON.parse(cpuData);
-      // Return the parsed JSON data
-      return cpus;
+      return await readDataFromJson("cpu");
     } catch (error) {
       console.error("Error occurred in fetching results:", error);
-      return {
-        errorMessage: `An error occurred when trying to fetch CPUs.`,
-      };
+    }
+  },
+  getCaseAccessories: async () => {
+    try {
+      return await readDataFromJson("case-accessory");
+    } catch (error) {
+      console.log("Error occurred in fetching results:", error);
+    }
+  },
+  getCases: async () => {
+    try {
+      return await readDataFromJson("case");
+    } catch (error) {
+      console.log("Error occurred in fetching results:", error);
+    }
+  },
+  getOS: async () => {
+    try {
+      return await readDataFromJson("os");
+    } catch (error) {
+      console.log("Error occurred in fetching results:", error);
+    }
+  },
+  getMemory: async () => {
+    try {
+      return await readDataFromJson("memory");
+    } catch (error) {
+      console.log("Error occurred in fetching results:", error);
+    }
+  },
+  getMonitor: async()=>{
+    try{
+      return await readDataFromJson("monitor");
+    }catch(error){
+      console.log("Error occurred in fetching results:", error);
+    }
+  },
+  getPowerSupply: async()=>{
+    try{
+      return await readDataFromJson("power-supply");
+    }catch(error){
+      console.log("Error occurred in fetching results:", error);
+    }
+  },
+  getInternalHardDrive: async()=>{
+    try{
+      return await readDataFromJson("internal-hard-drive");
+    }catch(error){
+      console.log("Error occurred in fetching results:", error);
+    }
+  },
+  getThermalPaste: async()=>{
+    try{
+      return await readDataFromJson("thermal-paste");
+    }catch(error){
+      console.log("Error occurred in fetching results:", error);
+    }
+  },
+  getWirelessNetworkCard: async()=>{
+    try{
+      return await readDataFromJson("wireless-network-card");
+    }catch(error){
+      console.log("Error occurred in fetching results:", error);
+    }
+  },
+  getMotherboard: async()=>{
+    try{
+      return await readDataFromJson("motherboard");
+    }catch(error){
+      console.log("Error occurred in fetching results:", error);
     }
   },
 };

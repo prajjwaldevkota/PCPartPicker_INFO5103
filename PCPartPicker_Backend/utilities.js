@@ -5,6 +5,8 @@
 import jwt from "jsonwebtoken";
 import * as cfg from "./config.js";
 import { getAuthorizationHeader } from "./sharedData.js";
+import fs from "fs";
+import path from "path";
 
 /**Gets userId based on Authorization header and token */
 const authorizeAndGetUserId = async () => {
@@ -25,4 +27,11 @@ const authorizeAndGetUserId = async () => {
   }
 };
 
-export { authorizeAndGetUserId };
+const readDataFromJson =async (fileName) => {
+  const filePath = path.resolve(`json/json/${fileName}.json`);
+  const fileData = fs.readFileSync(filePath, "utf-8");
+  const data = JSON.parse(fileData);
+  return data;
+}
+
+export { authorizeAndGetUserId, readDataFromJson };

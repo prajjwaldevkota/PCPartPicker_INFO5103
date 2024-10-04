@@ -10,64 +10,36 @@ export const resolvers = {
     try {
       const db = await dbRtns.getDBInstance();
       /*Validation*/
-      // var message = "";
-      // if (args.firstname == "" || args.firstname == undefined) {
-      //   message += "First name field is required.";
-      // }
-      // if (args.lastname == "" || args.lastname == undefined) {
-      //   message += "\nLast name field is required.";
-      // }
-      // if (args.email == "" || args.email == undefined) {
-      //   message += "\nEmail field is required.";
-      // }
-      // if (args.age == "" || args.age == undefined) {
-      //   message += "\nDate field is required.";
-      // }
-      // if (args.gender == "" || args.gender == undefined) {
-      //   message += "\n Gender field is required.";
-      // }
-      // if (args.membership == "" || args.membership == undefined) {
-      //   message += "\n Membership field is required.";
-      // }
-      // if (args.number == "" || args.number == undefined) {
-      //   message += "\n Whatsapp numbet is  required.";
-      // }
-      // if (args.password == "" || args.password == undefined) {
-      //   message += "\nPassword field is required.";
-      // } else if (
-      //   args.firstname != "" &&
-      //   args.lastname != "" &&
-      //   args.email != "" &&
-      //   args.password != "" &&
-      //   args.gender != "" &&
-      //   args.membership != "" &&
-      //   args.number != "" &&
-      //   args.age != ""
-      // ) {
-      //   if (!args.email.includes("@")) {
-      //     message += "\nInvalid email format. Please include '@' symbol.";
-      //   }
+      var message = "";
+      if (args.email == "" || args.email == undefined) {
+        message += "\nEmail field is required.";
+      }
+      if (args.password == "" || args.password == undefined) {
+        message += "\nPassword field is required.";
+      }
+      if (!args.email.includes("@")) {
+        message += "\nInvalid email format. Please include '@' symbol.";
+      }
 
-      //   if (args.password.length < 8) {
-      //     message += "\n Password must be at least 8 characters long.";
-      //   }
-      // }
+      if (args.password.length < 8) {
+        message += "\n Password must be at least 8 characters long.";
+      }
 
-      // if (message !== "") {
-      //   return {
-      //     errorMessage: message,
-      //   };
-      // }
+      if (message !== "") {
+        return {
+          errorMessage: message,
+        };
+      }
       // // See if a user with that email Id already exists
-      // let existingUser = await dbRtns.findOne(db, `AUTH`, {
-      //   email: args.email,
-      // });
+      let existingUser = await dbRtns.findOne(db, `AUTH`, {
+        email: args.email,
+      });
 
-      // if (existingUser ?? false) {
-      //   return {
-      //     errorMessage: `A user with email ${args.email} already exists`,
-      //   };
-      // }
+      if (existingUser ?? false) {
+        return {
+          errorMessage: `A user with email ${args.email} already exists`,
+        };
+      }
       const hashedPassword = await bcrypt.hash(args.password, 10);
       const authData = {
         username: args.username,
@@ -151,12 +123,10 @@ export const resolvers = {
   },
   getCpus: async () => {
     try {
-      const cpuFilePath = path.resolve( "json/json/cpu.json");
+      const cpuFilePath = path.resolve("json/json/cpu.json");
       const cpuData = fs.readFileSync(cpuFilePath, "utf-8");
-
       // Parse the file content to JSON
       const cpus = JSON.parse(cpuData);
-
       // Return the parsed JSON data
       return cpus;
     } catch (error) {

@@ -2,6 +2,8 @@ import * as cfg from "./config.js";
 import * as dbRtns from "./dbRoutines.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import fs from "fs";
+import path from "path";
 
 export const resolvers = {
   signup: async (args) => {
@@ -76,7 +78,7 @@ export const resolvers = {
       let authResult = await dbRtns.addOne(db, "AUTH", authData);
 
       // Now, let's create a userprofile for the user
-      //returns bunch of null values for now since we are not using various fields keeping it as as for now. 
+      //returns bunch of null values for now since we are not using various fields keeping it as as for now.
       const userProfileData = {
         username: args.username,
         firstname: args.firstname,
@@ -95,7 +97,7 @@ export const resolvers = {
         userProfileData
       );
 
-      return {user: authData };
+      return { user: authData };
     } catch (error) {
       // Handle any errors that occur
       console.error("Error occurred in fetching results:", error);
@@ -113,7 +115,6 @@ export const resolvers = {
       }
       if (args.password == "" || args.password == undefined) {
         message += "\nPassword field is required.";
-      
       }
 
       const db = await dbRtns.getDBInstance();
@@ -148,5 +149,21 @@ export const resolvers = {
       console.log("Here is your error");
     }
   },
-};
+  getCpus: async () => {
+    try {
+      const cpuFilePath = path.resolve( "json/json/cpu.json");
+      const cpuData = fs.readFileSync(cpuFilePath, "utf-8");
 
+      // Parse the file content to JSON
+      const cpus = JSON.parse(cpuData);
+
+      // Return the parsed JSON data
+      return cpus;
+    } catch (error) {
+      console.error("Error occurred in fetching results:", error);
+      return {
+        errorMessage: `An error occurred when trying to fetch CPUs.`,
+      };
+    }
+  },
+};

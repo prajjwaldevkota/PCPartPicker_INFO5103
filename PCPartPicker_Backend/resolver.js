@@ -155,45 +155,45 @@ export const resolvers = {
       console.log("Error occurred in fetching results:", error);
     }
   },
-  getMonitor: async()=>{
-    try{
+  getMonitor: async () => {
+    try {
       return await readDataFromJson("monitor");
-    }catch(error){
+    } catch (error) {
       console.log("Error occurred in fetching results:", error);
     }
   },
-  getPowerSupply: async()=>{
-    try{
+  getPowerSupply: async () => {
+    try {
       return await readDataFromJson("power-supply");
-    }catch(error){
+    } catch (error) {
       console.log("Error occurred in fetching results:", error);
     }
   },
-  getInternalHardDrive: async()=>{
-    try{
+  getInternalHardDrive: async () => {
+    try {
       return await readDataFromJson("internal-hard-drive");
-    }catch(error){
+    } catch (error) {
       console.log("Error occurred in fetching results:", error);
     }
   },
-  getThermalPaste: async()=>{
-    try{
+  getThermalPaste: async () => {
+    try {
       return await readDataFromJson("thermal-paste");
-    }catch(error){
+    } catch (error) {
       console.log("Error occurred in fetching results:", error);
     }
   },
-  getWirelessNetworkCard: async()=>{
-    try{
+  getWirelessNetworkCard: async () => {
+    try {
       return await readDataFromJson("wireless-network-card");
-    }catch(error){
+    } catch (error) {
       console.log("Error occurred in fetching results:", error);
     }
   },
-  getMotherboard: async()=>{
-    try{
+  getMotherboard: async () => {
+    try {
       return await readDataFromJson("motherboard");
-    }catch(error){
+    } catch (error) {
       console.log("Error occurred in fetching results:", error);
     }
   },

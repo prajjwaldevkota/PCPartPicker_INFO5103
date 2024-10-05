@@ -145,7 +145,7 @@
 /* Style navigation menu links */
 .topnav a {
   color: white;
-  padding: 35px 35px;
+  padding: 2.5vh 2.7vw;
   text-decoration: none;
   font-size: 22px;
 }

@@ -67,7 +67,7 @@ export default {
             // Redirect or take further actions after successful login
             alert(`Welcome ${user.firstname}! You are logged in.`)
             // For example, you can route the user to a dashboard:
-            // this.$router.push('/dashboard');
+            this.$router.push('/home');
           }
         }
       } catch (error) {
@@ -81,11 +81,10 @@ export default {
 
 <style scoped>
 .login-container {
+  margin-top: 30vh;
   text-align: center;
-  margin-top: 50px;
   color: white; /* White text */
   max-width: 400px;
-  margin: auto;
 }
 
 h1 {

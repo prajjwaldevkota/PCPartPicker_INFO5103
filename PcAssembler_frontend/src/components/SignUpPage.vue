@@ -89,6 +89,7 @@ export default {
 
 <style>
 .signup-container {
+  margin-top: 28vh;
   max-width: 400px;
   padding: 75px 150px; /* Adjusted padding */
   background: linear-gradient(135deg, #4b6cb7, #182848); /* Gradient background */

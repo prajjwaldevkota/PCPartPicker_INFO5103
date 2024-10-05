@@ -62,6 +62,7 @@ export default {
 
 <style>
 .welcome-container {
+  margin-top: 42vh;
   text-align: center;
   opacity: 0; /* Initially hidden */
   transform: translateY(-50px); /* Start above */

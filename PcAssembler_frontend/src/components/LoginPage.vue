@@ -29,7 +29,7 @@ export default {
         mutation($email: String!, $password: String!) {
           login(email: $email, password: $password) {
             token, user {
-              id, firstname
+              id, email
             },
             errorMessage
           }
@@ -65,7 +65,7 @@ export default {
             sessionStorage.setItem('token', token)
 
             // Redirect or take further actions after successful login
-            alert(`Welcome ${user.firstname}! You are logged in.`)
+            alert(`Welcome ${user.email}! You are logged in.`)
             // For example, you can route the user to a dashboard:
             this.$router.push('/home');
           }

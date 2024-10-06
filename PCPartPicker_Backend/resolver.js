@@ -111,7 +111,7 @@ export const resolvers = {
         token,
         user: {
           id: user._id,
-          firstname: user.firstname,
+          // firstname: user.firstname,
           email: user.email,
         },
         errorMessage: message,

@@ -61,6 +61,10 @@ export default {
 </script>
 
 <style>
+body {
+  background-color: #242323;
+  color: white;
+}
 .welcome-container {
   margin-top: 42vh;
   text-align: center;

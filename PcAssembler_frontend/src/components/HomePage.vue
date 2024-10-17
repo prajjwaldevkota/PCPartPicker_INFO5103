@@ -1,157 +1,92 @@
 <template>
-    <div class="container">
-      <div class="topnav">
-        <a href="/home">Home</a>
-        <a href="#builds">PC Builds</a>
-        <a href="#partsbrowser">Parts Browser</a>
-        <a href="#about">About</a>
-        <a href="/">Logout</a>
-      </div>
-      <table class="styled-table">
-        <thead>
-          <tr>
-            <td>PC Build Name</td>
-            <td>Build Type</td>
-            <td>Build Date</td>
-            <td>Build Status</td>
-            <td>Cost Estimate</td>
-          </tr>
-        </thead>
-        <!-- This is some mock data for now -->
-        <tbody>
-        <tr>
-            <td>Test Build PC</td>
-            <td>This is a Build Type</td>
-            <td>April 24, 1998</td>
-            <td>Complete</td>
-            <td>$1420.23</td>
-        </tr>
-        <tr>
-            <td>Test Build PC</td>
-            <td>This is a Build Type</td>
-            <td>April 24, 1998</td>
-            <td>Complete</td>
-            <td>$1420.23</td>
-        </tr>
-        <tr>
-            <td>Test Build PC</td>
-            <td>This is a Build Type</td>
-            <td>April 24, 1998</td>
-            <td>Complete</td>
-            <td>$1420.23</td>
-        </tr>
-        <tr>
-            <td>Test Build PC</td>
-            <td>This is a Build Type</td>
-            <td>April 24, 1998</td>
-            <td>Complete</td>
-            <td>$1420.23</td>
-        </tr>
-        <!-- and so on... -->
-    </tbody>
-      </table>
-      <div class="btn-div">
-        <button type="submit" class="create-button">Create New Build +</button>
-      </div>
-    </div>
+  <v-app>
+    <v-app-bar>
+      <v-toolbar-title>PC Assembler</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn color="secondary" text @click="$router.push('/home')">Home</v-btn>
+      <v-btn text @click="$router.push('#builds')">PC Builds</v-btn>
+      <v-btn text @click="$router.push('#partsbrowser')">Parts Browser</v-btn>
+      <v-btn text @click="$router.push('#about')">About</v-btn>
+      <v-btn text @click="logout">Logout</v-btn>
+    </v-app-bar>
+    <v-container>
+      <v-row style="margin-top:15vh;">
+        <v-col>
+          <v-card>
+            <v-tabs v-model="tab" align-tabs="center" color="deep-purple-accent-4">
+              <v-tab :value="1">Gaming Builds</v-tab>
+              <v-tab :value="2">Streaming Builds</v-tab>
+              <v-tab :value="3">Budget Builds</v-tab>
+            </v-tabs>
+
+            <v-tabs-window v-model="tab">
+              <v-tabs-window-item v-for="n in 3" :key="n" :value="n">
+                <v-container fluid>
+                  <v-row>
+                    <v-col v-for="i in 6" :key="i" cols="12" md="4">
+                      <v-img
+                        :lazy-src="`https://picsum.photos/10/6?image=${i * n * 5 + 10}`"
+                        :src="`https://picsum.photos/500/300?image=${i * n * 5 + 10}`"
+                        height="205"
+                        cover
+                      ></v-img>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-tabs-window-item>
+            </v-tabs-window>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col cols="auto">
+          <v-btn variant="outlined" @click="createNewBuild"> Create New Build + </v-btn>
+        </v-col>
+        </v-row>
+    </v-container>
+
+    <!--<v-table :headers="headers" :items="buildSummaries"></v-table>-->
+
+    
+  </v-app>
 </template>
-  
+
 <script>
-  export default {
-    name: 'HomePage',
-    data() {
-      return {
-        buildSummaries: [],
-      }
-    },
-    methods: {
-      // TODO: load builds / build summaries to display summary data in table
-      async loadBuildSummaries() {}
+export default {
+  name: 'HomePage',
+  data() {
+    return {
+      headers: [
+        { text: 'PC Build Name', value: 'name' },
+        { text: 'Build Type', value: 'type' },
+        { text: 'Build Date', value: 'date' },
+        { text: 'Build Status', value: 'status' },
+        { text: 'Cost Estimate', value: 'cost' }
+      ],
+      buildSummaries: [
+        {
+          name: 'Test Build PC',
+          type: 'This is a Build Type',
+          date: 'April 24, 1998',
+          status: 'Complete',
+          cost: '$1420.23'
+        },
+        {
+          name: 'Test Build PC',
+          type: 'This is a Build Type',
+          date: 'April 24, 1998',
+          status: 'Complete',
+          cost: '$1420.23'
+        }
+      ],
+      tab:null,
     }
+  },
+  methods: {
+    // TODO: load builds / build summaries to display summary data in table
+    async loadBuildSummaries() {}
   }
+}
 </script>
 
-<style scoped>
-.container {
-  color: white; /* White text */
-  width: 100vw;
-  justify-content: center;
-  align-items: center;
-}
-.app-header {
-  background-color: #657382;
-  width: 100%;
-  height: 7vh;
-  margin-bottom: 50px;
-}
-.login-form {
-  background: linear-gradient(135deg, #4b6cb7, #182848); /* Gradient background */
-  padding: 50px 120px; /* Adjusted padding */
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-}
-.styled-table {
-    border-collapse: collapse;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    width: 80%;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    border: 2px solid #009879;
-    border-radius: 2px;
-    margin: auto;
-}
-.styled-table thead tr {
-    background-color: #009879;
-    color: #ffffff;
-    text-align: left;
-}
-.styled-table th,
-.styled-table td {
-    padding: 12px 15px;
-}
-.create-button {
-  width: 400px;
-  height: 100px;
-  margin-top: 100px; /* Increased padding for button */
-  background-color: #9c27b0; /* Purple background */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1.2em;
-  transition:
-    background-color 0.3s,
-    transform 0.2s; /* Smooth hover effect */
-}
-.create-button:hover {
-  background-color: #7b1fa2; /* Darker purple on hover */
-  transform: scale(1.05); /* Slightly enlarge button */
-}
-.btn-div {
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.topnav {
-  overflow: visible;
-  position: relative;
-  background-color: #657382;
-  width: 100%;
-  height: 7vh;
-  margin-bottom: 50px;
-  display: flex;
-}
-/* Style navigation menu links */
-.topnav a {
-  color: white;
-  padding: 2.5vh 2.7vw;
-  text-decoration: none;
-  font-size: 22px;
-}
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
-}
-
-</style>
+<style></style>

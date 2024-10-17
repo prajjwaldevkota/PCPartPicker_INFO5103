@@ -1,74 +1,145 @@
 <template>
-    <div class="container">
-      <div class="topnav">
-        <a href="/home">Home</a>
-        <a href="#builds">PC Builds</a>
-        <a href="#partsbrowser">Parts Browser</a>
-        <a href="#about">About</a>
-        <a href="/">Logout</a>
-      </div>
-      <table class="styled-table">
-        <thead>
-          <tr>
-            <td>PC Build Name</td>
-            <td>Build Type</td>
-            <td>Build Date</td>
-            <td>Build Status</td>
-            <td>Cost Estimate</td>
-          </tr>
-        </thead>
-        <!-- This is some mock data for now -->
-        <tbody>
+  <div class="container">
+    <div class="topnav">
+      <a href="/home">Home</a>
+      <a href="#builds">PC Builds</a>
+      <a href="#partsbrowser">Parts Browser</a>
+      <a href="#about">About</a>
+      <a href="/">Logout</a>
+    </div>
+    <table class="styled-table">
+      <thead>
         <tr>
-            <td>Test Build PC</td>
-            <td>This is a Build Type</td>
-            <td>April 24, 1998</td>
-            <td>Complete</td>
-            <td>$1420.23</td>
+          <td>PC Build Name</td>
+          <td>Build Type</td>
+          <td>Build Date</td>
+          <td>Build Status</td>
+          <td>Cost Estimate</td>
+        </tr>
+      </thead>
+      <!-- This is some mock data for now -->
+      <tbody>
+        <tr>
+          <td>Test Build PC</td>
+          <td>This is a Build Type</td>
+          <td>April 24, 1998</td>
+          <td>Complete</td>
+          <td>$1420.23</td>
         </tr>
         <tr>
-            <td>Test Build PC</td>
-            <td>This is a Build Type</td>
-            <td>April 24, 1998</td>
-            <td>Complete</td>
-            <td>$1420.23</td>
+          <td>Test Build PC</td>
+          <td>This is a Build Type</td>
+          <td>April 24, 1998</td>
+          <td>Complete</td>
+          <td>$1420.23</td>
         </tr>
         <tr>
-            <td>Test Build PC</td>
-            <td>This is a Build Type</td>
-            <td>April 24, 1998</td>
-            <td>Complete</td>
-            <td>$1420.23</td>
+          <td>Test Build PC</td>
+          <td>This is a Build Type</td>
+          <td>April 24, 1998</td>
+          <td>Complete</td>
+          <td>$1420.23</td>
         </tr>
         <tr>
-            <td>Test Build PC</td>
-            <td>This is a Build Type</td>
-            <td>April 24, 1998</td>
-            <td>Complete</td>
-            <td>$1420.23</td>
+          <td>Test Build PC</td>
+          <td>This is a Build Type</td>
+          <td>April 24, 1998</td>
+          <td>Complete</td>
+          <td>$1420.23</td>
         </tr>
         <!-- and so on... -->
-    </tbody>
-      </table>
-      <div class="btn-div">
-        <button type="submit" class="create-button">Create New Build +</button>
-      </div>
+      </tbody>
+    </table>
+    <div class="btn-div">
+      <button type="submit" class="create-button">Create New Build +</button>
     </div>
+  </div>
 </template>
-  
+
 <script>
-  export default {
-    name: 'HomePage',
-    data() {
-      return {
-        buildSummaries: [],
-      }
-    },
-    methods: {
-      // TODO: load builds / build summaries to display summary data in table
-      async loadBuildSummaries() {}
+export default {
+  name: 'HomePage',
+  data() {
+    return {
+      buildSummaries: []
     }
+  },
+  methods: {
+    async loadBuildSummaries() {
+      const getBuildMutation = `
+      query{
+        getBuildsByUser{
+        name
+    components {
+      cpu {
+        name
+        core_clock
+        core_count
+        price
+      }
+      motherboard {
+        name
+        price
+      }
+      os {
+        name
+      }
+      memory {
+        name
+      }
+      monitor {
+        name
+      }
+      powerSupply {
+        name
+      }
+      internalHardDrive {
+        name
+      }
+      caseAccessory {
+        name
+      }
+      thermalPaste {
+        name
+      }
+      wirelessNetworkCard {
+        name
+      }
+    }
+    createdAt
+    }
+  }`
+      const token = sessionStorage.getItem('token');
+      
+      const URL = 'http://localhost:3045/graphql';
+      try {
+        const response = await fetch(URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            query: getBuildMutation
+          })
+        })
+        const result = await response.json()
+        console.log(result)
+        if (result.errors) {
+          console.error('Error fetching builds:', result.errors)
+        } else {
+          this.buildSummaries = result.data.getBuilds
+        }
+      } catch (error) {
+        console.error('Builds error:', error)
+        alert('An error occurred during loading builds.')
+      }
+    }
+  },
+  mounted() {
+    this.loadBuildSummaries() // Load build summaries when the component is mounted
   }
+}
 </script>
 
 <style scoped>
@@ -91,23 +162,23 @@
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
 }
 .styled-table {
-    border-collapse: collapse;
-    font-size: 0.9em;
-    font-family: sans-serif;
-    width: 80%;
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-    border: 2px solid #009879;
-    border-radius: 2px;
-    margin: auto;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  width: 80%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+  border: 2px solid #009879;
+  border-radius: 2px;
+  margin: auto;
 }
 .styled-table thead tr {
-    background-color: #009879;
-    color: #ffffff;
-    text-align: left;
+  background-color: #009879;
+  color: #ffffff;
+  text-align: left;
 }
 .styled-table th,
 .styled-table td {
-    padding: 12px 15px;
+  padding: 12px 15px;
 }
 .create-button {
   width: 400px;
@@ -153,5 +224,4 @@
   background-color: #ddd;
   color: black;
 }
-
 </style>

@@ -12,6 +12,7 @@ type Query {
     getThermalPaste: [thermalPaste]
     getWirelessNetworkCard: [wirelessNetworkCard]
     getMotherboard: [motherboard]
+    getBuildsByUser: [Build]
 },
 type User {
     id: ID
@@ -116,9 +117,52 @@ type motherboard{
     max_memory:Int
     memory_slots:Int
     color:String
-}
+},
+type Build {
+  id: ID
+  user: User
+  name: String
+  components: BuildComponents 
+  createdAt: String
+},
+type BuildComponents {
+  cpu: CPU
+  motherboard: motherboard
+  os: OS
+  memory: memory
+  monitor: monitor
+  powerSupply: powerSupply
+  internalHardDrive: internalHardDrive
+  caseAccessory: caseAccessory
+  thermalPaste: thermalPaste
+  wirelessNetworkCard: wirelessNetworkCard
+},
 type Mutation {
     signup(username:String, email: String, age:String, membership:String, number: String,  password: String): AuthPayload
     login(email: String, password: String): AuthPayload
+    saveBuild( userId: ID
+    name: String
+    cpuName: String
+    cpuCoreClock: Float
+    cpuCoreCount: Int
+    cpuPrice: Float
+    motherboardName: String
+    motherboardPrice: Float
+    osName: String
+    osPrice: Float
+    memoryName: String
+    memoryPrice: Float
+    monitorName: String
+    monitorPrice: Float
+    powerSupplyName: String
+    powerSupplyPrice: Float
+    internalHardDriveName: String
+    internalHardDrivePrice: Float
+    caseAccessoryName: String
+    caseAccessoryPrice: Float
+    thermalPasteName: String
+    thermalPastePrice: Float
+    wirelessNetworkCardName: String
+    wirelessNetworkCardPrice:Float): Build
 }
 `;

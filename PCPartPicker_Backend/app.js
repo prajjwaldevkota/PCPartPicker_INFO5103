@@ -19,14 +19,13 @@ app.register(mercurius, {
 });
 
 //commented out for testing purposes, will use for authentication purposes for registered users in the future
-// app.addHook("preHandler", async (request, reply) => {
-//   // Access the authorization header from the request
-//   const authorizationHeader = request.headers['authorization'];
+app.addHook("preHandler", async (request, reply) => {
+  // Access the authorization header from the request
+  const authorizationHeader = request.headers["authorization"];
 
-//   // Store the authorization header using the shared data module
-//   setAuthorizationHeader(authorizationHeader);
-// });
-
+  // Store the authorization header using the shared data module
+  setAuthorizationHeader(authorizationHeader);
+});
 
 app.listen({ port: cfg.PORT }, (err, address) => {
   if (err) {

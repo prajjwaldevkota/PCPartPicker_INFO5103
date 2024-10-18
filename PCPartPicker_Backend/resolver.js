@@ -3,6 +3,10 @@ import * as dbRtns from "./dbRoutines.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { readDataFromJson } from "./utilities.js";
+import { ObjectId } from "mongodb";
+import { authorizeAndGetUserId } from "./utilities.js";
+import { userInfo } from "os";
+import { error } from "console";
 
 export const resolvers = {
   signup: async (args) => {
@@ -195,6 +199,94 @@ export const resolvers = {
       return await readDataFromJson("motherboard");
     } catch (error) {
       console.log("Error occurred in fetching results:", error);
+    }
+  },
+  saveBuild: async (args) => {
+    try {
+      const idString = await authorizeAndGetUserId();
+      const userId = new ObjectId(idString);
+
+      // Build the data object to be inserted
+      const buildData = {
+        userId, // Associate the build with the user
+        name: args.name, // Build name
+        components: {
+          cpu: {
+            name: args.cpuName,
+            core_clock: args.cpuCoreClock,
+            core_count: args.cpuCoreCount,
+            price: args.cpuPrice,
+          },
+          motherboard: {
+            name: args.motherboardName,
+            price: args.motherboardPrice,
+          },
+          os: {
+            name: args.osName,
+            price: args.osPrice,
+          },
+          memory: {
+            name: args.memoryName,
+            price: args.memoryPrice,
+          },
+          monitor: {
+            name: args.monitorName,
+            price: args.monitorPrice,
+          },
+          powerSupply: {
+            name: args.powerSupplyName,
+            price: args.powerSupplyPrice,
+          },
+          internalHardDrive: {
+            name: args.internalHardDriveName,
+            price: args.internalHardDrivePrice,
+          },
+          caseAccessory: {
+            name: args.caseAccessoryName,
+            price: args.caseAccessoryPrice,
+          },
+          thermalPaste: {
+            name: args.thermalPasteName,
+            price: args.thermalPastePrice,
+          },
+          wirelessNetworkCard: {
+            name: args.wirelessNetworkCardName,
+            price: args.wirelessNetworkCardPrice,
+          },
+        },
+        createdAt: new Date().toISOString(), // Timestamp
+      };
+
+      // Insert the build into the 'builds' collection
+      const db = await dbRtns.getDBInstance();
+      const result = await dbRtns.addOne(db, "builds", buildData);
+
+      // Return the inserted build (you can modify it based on the shape you want)
+      return {
+        id: result.insertedId,
+        user: userId, // Returning the user ID (you can return user details if required)
+        ...buildData,
+      };
+    } catch (error) {
+      console.log("Error occurred in adding build:", error);
+    }
+  },
+  getBuildsByUser: async () => {
+    try {
+      const idString = await authorizeAndGetUserId();
+      const userId = new ObjectId(idString);
+
+      // Fetch user profile data using the user ID
+      const db = await dbRtns.getDBInstance();
+      const userBuilds = await dbRtns.findAll(db, "builds", { userId });
+      console.log("User builds:", userBuilds);
+      if (!userBuilds) {
+        console.log("No builds found for the user");
+        return [];
+      }
+    return userBuilds;
+    } catch (error) {
+      console.log("Error occurered in fetching results:", error);
     }
   },
 };

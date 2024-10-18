@@ -279,18 +279,24 @@ export const resolvers = {
       // Fetch user profile data using the user ID
       const db = await dbRtns.getDBInstance();
       const userBuilds = await dbRtns.findAll(db, "builds", { userId });
-      console.log("User builds:", userBuilds);
+
       if (!userBuilds) {
         console.log("No builds found for the user");
         return [];
       }
-    return userBuilds;
+      const buildsWithCost = userBuilds.map(build => {
+        // Calculate the total cost of the build's components
+        const totalCost = Object.values(build.components).reduce((acc, component) => {
+          return acc + (component.price || 0); // Sum the price of each component
+        }, 0);
+  
+        // Return the build with the added totalCost field
+        return { ...build, totalCost };
+      });
+  
+    return buildsWithCost;
     } catch (error) {
       console.log("Error occurered in fetching results:", error);
     }
   },
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> test/stylizing

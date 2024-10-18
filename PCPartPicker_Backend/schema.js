@@ -124,6 +124,7 @@ type Build {
   name: String
   components: BuildComponents 
   createdAt: String
+  totalCost: Float
 },
 type BuildComponents {
   cpu: CPU

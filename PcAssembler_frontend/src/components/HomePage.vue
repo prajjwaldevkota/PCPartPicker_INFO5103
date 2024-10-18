@@ -18,8 +18,8 @@
               <template v-slot:item="{ item }">
                 <tr @click="openBuildDetails(item)">
                   <td>{{ item.name }}</td>
-                  <td>{{ item.createdAt }}</td>
-                  <td>{{ item.cost }}</td>
+                  <td>{{ formatDate(item.createdAt) }}</td>
+                  <td>{{ `$ ` + item.totalCost }}</td>
                 </tr>
               </template>
             </v-data-table>
@@ -50,7 +50,7 @@
           </v-list>
         </v-card-text>
         <v-card-actions>
-          <v-btn variant="tonal" color="primary" text @click="dialog = false">Close</v-btn>
+          <v-btn variant="tonal" color="red" text @click="dialog = false">Close</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -70,8 +70,7 @@ export default {
       buildSummaries: [],
       dialog: false,
       selectedBuildComponents: [],
-      tab:null,
-      totalCost: 0,
+      tab: null,
       formattedDate: ''
     }
   },
@@ -82,18 +81,19 @@ export default {
           getBuildsByUser {
             name
             components {
-              cpu { name }
-              motherboard { name }
-              os { name }
-              memory { name }
-              monitor { name }
-              powerSupply { name }
-              internalHardDrive { name }
-              caseAccessory { name }
-              thermalPaste { name }
-              wirelessNetworkCard { name }
+              cpu { name, price }
+              motherboard { name,price }
+              os { name,price }
+              memory { name,price }
+              monitor { name,price }
+              powerSupply { name,price }
+              internalHardDrive { name,price }
+              caseAccessory { name,price }
+              thermalPaste { name,price }
+              wirelessNetworkCard { name,price }
             }
             createdAt
+            totalCost
           }
         }
       `
@@ -113,19 +113,30 @@ export default {
           console.error('Error fetching builds:', result.errors)
         } else {
           this.buildSummaries = result.data.getBuildsByUser
+          console.log('Builds:', this.buildSummaries)
         }
       } catch (error) {
         console.error('Builds error:', error)
         alert('An error occurred during loading builds.')
       }
     },
+
     openBuildDetails(item) {
-      console.log(item.components)
       this.selectedBuildComponents = Object.entries(item.components)
         .map(([key, component]) => ({ key, component })) // Create an array of { key, component }
         .filter(({ component }) => component && component.name) // Filter out invalid components // filter to only show the components that exist
+      // Calculate the total cost
 
       this.dialog = true
+    },
+    formatDate(dateString) {
+      const date = new Date(dateString)
+      return date.toLocaleDateString('en-US', {
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric'
+      })
     },
     createNewBuild() {
       // Functionality to create a new build

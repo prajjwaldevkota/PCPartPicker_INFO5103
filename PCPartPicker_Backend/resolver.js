@@ -289,4 +289,8 @@ export const resolvers = {
       console.log("Error occurered in fetching results:", error);
     }
   },
+<<<<<<< HEAD
 };
+=======
+};
+>>>>>>> test/stylizing

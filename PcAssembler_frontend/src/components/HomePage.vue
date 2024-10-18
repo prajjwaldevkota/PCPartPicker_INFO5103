@@ -1,59 +1,60 @@
 <template>
-  <div class="container">
-    <div class="topnav">
-      <a href="/home">Home</a>
-      <a href="#builds">PC Builds</a>
-      <a href="#partsbrowser">Parts Browser</a>
-      <a href="#about">About</a>
-      <a href="/">Logout</a>
-    </div>
-    <table class="styled-table">
-      <thead>
-        <tr>
-          <td>PC Build Name</td>
-          <td>Build Type</td>
-          <td>Build Date</td>
-          <td>Build Status</td>
-          <td>Cost Estimate</td>
-        </tr>
-      </thead>
-      <!-- This is some mock data for now -->
-      <tbody>
-        <tr>
-          <td>Test Build PC</td>
-          <td>This is a Build Type</td>
-          <td>April 24, 1998</td>
-          <td>Complete</td>
-          <td>$1420.23</td>
-        </tr>
-        <tr>
-          <td>Test Build PC</td>
-          <td>This is a Build Type</td>
-          <td>April 24, 1998</td>
-          <td>Complete</td>
-          <td>$1420.23</td>
-        </tr>
-        <tr>
-          <td>Test Build PC</td>
-          <td>This is a Build Type</td>
-          <td>April 24, 1998</td>
-          <td>Complete</td>
-          <td>$1420.23</td>
-        </tr>
-        <tr>
-          <td>Test Build PC</td>
-          <td>This is a Build Type</td>
-          <td>April 24, 1998</td>
-          <td>Complete</td>
-          <td>$1420.23</td>
-        </tr>
-        <!-- and so on... -->
-      </tbody>
-    </table>
-    <div class="btn-div">
-      <button type="submit" class="create-button">Create New Build +</button>
-    </div>
-  </div>
+  <v-app>
+    <v-app-bar>
+      <v-toolbar-title>PC Assembler</v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-btn color="secondary" text @click="$router.push('/home')">Home</v-btn>
+      <v-btn text @click="$router.push('#builds')">PC Builds</v-btn>
+      <v-btn text @click="$router.push('#partsbrowser')">Parts Browser</v-btn>
+      <v-btn text @click="$router.push('#about')">About</v-btn>
+      <v-btn text @click="logout">Logout</v-btn>
+    </v-app-bar>
+
+    <v-container>
+      <v-row style="margin-top: 15vh">
+        <v-col>
+          <v-card>
+            <v-data-table :headers="headers" :items="buildSummaries">
+              <template v-slot:item="{ item }">
+                <tr @click="openBuildDetails(item)">
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.createdAt }}</td>
+                  <td>{{ item.cost }}</td>
+                </tr>
+              </template>
+            </v-data-table>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <v-row justify="center">
+        <v-col cols="auto">
+          <v-btn variant="outlined" @click="createNewBuild">Create New Build +</v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <!-- Modal to show build details -->
+    <v-dialog v-model="dialog" max-width="600px">
+      <v-card>
+        <v-card-title>Build Details</v-card-title>
+        <v-card-text>
+          <v-list dense>
+            <v-list-item-group>
+              <v-list-item v-for="(item, index) in selectedBuildComponents" :key="index">
+                <v-list-item-content>
+                  <v-list-item-title>{{ item.key }}: {{ item.component.name }}</v-list-item-title>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-card-text>
+        <v-card-actions>
+          <v-btn variant="tonal" color="primary" text @click="dialog = false">Close</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-app>
 </template>
 
 <script>
@@ -61,57 +62,43 @@ export default {
   name: 'HomePage',
   data() {
     return {
-      buildSummaries: []
+      headers: [
+        { title: 'PC Build Name', value: 'name' },
+        { title: 'Build Date', value: 'createdAt' },
+        { title: 'Cost Estimate', value: 'cost' }
+      ],
+      buildSummaries: [],
+      dialog: false,
+      selectedBuildComponents: [],
+      tab:null,
+      totalCost: 0,
+      formattedDate: ''
     }
   },
   methods: {
     async loadBuildSummaries() {
       const getBuildMutation = `
-      query{
-        getBuildsByUser{
-        name
-    components {
-      cpu {
-        name
-        core_clock
-        core_count
-        price
-      }
-      motherboard {
-        name
-        price
-      }
-      os {
-        name
-      }
-      memory {
-        name
-      }
-      monitor {
-        name
-      }
-      powerSupply {
-        name
-      }
-      internalHardDrive {
-        name
-      }
-      caseAccessory {
-        name
-      }
-      thermalPaste {
-        name
-      }
-      wirelessNetworkCard {
-        name
-      }
-    }
-    createdAt
-    }
-  }`
-      const token = sessionStorage.getItem('token');
-      
-      const URL = 'http://localhost:3045/graphql';
+        query {
+          getBuildsByUser {
+            name
+            components {
+              cpu { name }
+              motherboard { name }
+              os { name }
+              memory { name }
+              monitor { name }
+              powerSupply { name }
+              internalHardDrive { name }
+              caseAccessory { name }
+              thermalPaste { name }
+              wirelessNetworkCard { name }
+            }
+            createdAt
+          }
+        }
+      `
+      const token = sessionStorage.getItem('token')
+      const URL = 'http://localhost:3045/graphql'
       try {
         const response = await fetch(URL, {
           method: 'POST',
@@ -119,21 +106,29 @@ export default {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`
           },
-          body: JSON.stringify({
-            query: getBuildMutation
-          })
+          body: JSON.stringify({ query: getBuildMutation })
         })
         const result = await response.json()
-        console.log(result)
         if (result.errors) {
           console.error('Error fetching builds:', result.errors)
         } else {
-          this.buildSummaries = result.data.getBuilds
+          this.buildSummaries = result.data.getBuildsByUser
         }
       } catch (error) {
         console.error('Builds error:', error)
         alert('An error occurred during loading builds.')
       }
+    },
+    openBuildDetails(item) {
+      console.log(item.components)
+      this.selectedBuildComponents = Object.entries(item.components)
+        .map(([key, component]) => ({ key, component })) // Create an array of { key, component }
+        .filter(({ component }) => component && component.name) // Filter out invalid components // filter to only show the components that exist
+
+      this.dialog = true
+    },
+    createNewBuild() {
+      // Functionality to create a new build
     }
   },
   mounted() {
@@ -142,86 +137,4 @@ export default {
 }
 </script>
 
-<style scoped>
-.container {
-  color: white; /* White text */
-  width: 100vw;
-  justify-content: center;
-  align-items: center;
-}
-.app-header {
-  background-color: #657382;
-  width: 100%;
-  height: 7vh;
-  margin-bottom: 50px;
-}
-.login-form {
-  background: linear-gradient(135deg, #4b6cb7, #182848); /* Gradient background */
-  padding: 50px 120px; /* Adjusted padding */
-  border-radius: 10px;
-  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
-}
-.styled-table {
-  border-collapse: collapse;
-  font-size: 0.9em;
-  font-family: sans-serif;
-  width: 80%;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
-  border: 2px solid #009879;
-  border-radius: 2px;
-  margin: auto;
-}
-.styled-table thead tr {
-  background-color: #009879;
-  color: #ffffff;
-  text-align: left;
-}
-.styled-table th,
-.styled-table td {
-  padding: 12px 15px;
-}
-.create-button {
-  width: 400px;
-  height: 100px;
-  margin-top: 100px; /* Increased padding for button */
-  background-color: #9c27b0; /* Purple background */
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 1.2em;
-  transition:
-    background-color 0.3s,
-    transform 0.2s; /* Smooth hover effect */
-}
-.create-button:hover {
-  background-color: #7b1fa2; /* Darker purple on hover */
-  transform: scale(1.05); /* Slightly enlarge button */
-}
-.btn-div {
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.topnav {
-  overflow: visible;
-  position: relative;
-  background-color: #657382;
-  width: 100%;
-  height: 7vh;
-  margin-bottom: 50px;
-  display: flex;
-}
-/* Style navigation menu links */
-.topnav a {
-  color: white;
-  padding: 2.5vh 2.7vw;
-  text-decoration: none;
-  font-size: 22px;
-}
-.topnav a:hover {
-  background-color: #ddd;
-  color: black;
-}
-</style>
+<style scoped></style>

@@ -1,16 +1,18 @@
 <template>
   <v-app>
     <v-container>
-      <v-row>
-        <v-col cols="12">
-          <v-card class="mb-6">
-            <v-card-title class="text-h4 py-4">PC Parts Browser</v-card-title>
-          </v-card>
-        </v-col>
-      </v-row>
+      <v-app-bar>
+        <v-toolbar-title>PC Assembler Parts</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn text @click="$router.push('/home')">Home</v-btn>
+        <v-btn text @click="$router.push('/guide')">Guide</v-btn>
+        <v-btn color="secondary" text @click="$router.push('/partsbrowser')">Parts Browser</v-btn>
+        <v-btn text @click="$router.push('/about')">About</v-btn>
+        <v-btn text @click="logout">Logout</v-btn>
+      </v-app-bar>
 
       <v-row>
-        <v-col cols="12">
+        <v-col cols="12" class="mt-15">
           <v-tabs v-model="activeTab" color="primary" align-tabs="center">
             <v-tab value="cpu">CPUs</v-tab>
             <v-tab value="motherboard">Motherboards</v-tab>
@@ -26,17 +28,27 @@
         </v-col>
       </v-row>
 
-      <!-- Component Type Selection -->
+      <v-row>
+        <v-col cols="12" md="6" class="mx-auto">
+          <v-text-field
+            v-model="searchQuery"
+            label="Search components"
+            prepend-inner-icon="mdi-magnify"
+            variant="outlined"
+            density="comfortable"
+            clearable
+          ></v-text-field>
+        </v-col>
+      </v-row>
+
       <v-window v-model="activeTab">
-        <!-- CPU Tab -->
         <v-window-item value="cpu">
           <v-row>
-            <v-col v-for="cpu in cpus" :key="cpu.id" cols="12" md="6" lg="4">
+            <v-col v-for="cpu in filteredCPUs" :key="cpu.id" cols="12" md="6" lg="4">
               <v-card class="h-100">
                 <v-card-title class="text-h6">{{ cpu.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ cpu.price }}</div>
-                  <div>Core Count: {{ cpu.core_count }}</div>
                   <div>Core Count: {{ cpu.core_count }}</div>
                   <div>Core Clock: {{ cpu.core_clock }}GHz</div>
                   <div>Boost Clock: {{ cpu.boost_clock }}GHz</div>
@@ -46,25 +58,6 @@
             </v-col>
           </v-row>
         </v-window-item>
-
-        <!-- Motherboard Tab -->
-        <v-window-item value="motherboard">
-          <v-row>
-            <v-col v-for="mb in motherboards" :key="mb.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
-                <v-card-title class="text-h6">{{ mb.name }}</v-card-title>
-                <v-card-text>
-                  <div>Price: ${{ mb.price }}</div>
-                  <div>Socket: {{ mb.socket }}</div>
-                  <div>Form Factor: {{ mb.form_factor }}</div>
-                  <div>Memory Slots: {{ mb.memory_slots }}</div>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-window-item>
-
-        <!-- Add similar simplified versions for other components -->
       </v-window>
     </v-container>
   </v-app>
@@ -76,6 +69,7 @@ export default {
   data() {
     return {
       activeTab: 'cpu',
+      searchQuery: '',
       cpus: [],
       motherboards: [],
       memory: [],
@@ -88,7 +82,28 @@ export default {
       networkCards: []
     }
   },
+  computed: {
+    filteredCPUs() {
+      if (!this.searchQuery) return this.cpus
+      const query = this.searchQuery.toLowerCase()
+      
+      return this.cpus.filter(cpu => 
+        cpu.name.toLowerCase().includes(query)
+      )
+    },
+    filteredMotherboards() {
+      if (!this.searchQuery) return this.motherboards
+      const query = this.searchQuery.toLowerCase()
+      return this.motherboards.filter(mb => 
+        mb.name.toLowerCase().includes(query)
+      )
+    }
+  },
   methods: {
+    logout() {
+      sessionStorage.removeItem('token')
+      this.$router.push('/login')
+    },
     async loadComponents() {
       const query = `
           query {
@@ -186,9 +201,16 @@ export default {
         })
         const result = await response.json()
         if (result.data) {
-          this.cpus = result.data.getCpus || []
-          this.motherboards = result.data.getMotherboard || []
-          this.memory = result.data.getMemory || []
+          this.cpus = (result.data.getCpus || []).slice(0, 50)
+          this.motherboards = (result.data.getMotherboard || []).slice(0, 50)
+          this.memory = (result.data.getMemory || []).slice(0, 50)
+          this.os = (result.data.getOS || []).slice(0, 50)
+          this.monitors = (result.data.getMonitor || []).slice(0, 50)
+          this.psus = (result.data.getPowerSupply || []).slice(0, 50)
+          this.storage = (result.data.getInternalHardDrive || []).slice(0, 50)
+          this.cases = (result.data.getCaseAccessories || []).slice(0, 50)
+          this.thermalPaste = (result.data.getThermalPaste || []).slice(0, 50)
+          this.networkCards = (result.data.getWirelessNetworkCard || []).slice(0, 50)
         }
       } catch (error) {
         console.error('Error loading components:', error)

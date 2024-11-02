@@ -4,9 +4,9 @@
       <v-toolbar-title>PC Assembler</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn color="secondary" text @click="$router.push('/home')">Home</v-btn>
-      <v-btn text @click="$router.push('#builds')">PC Builds</v-btn>
-      <v-btn text @click="$router.push('#partsbrowser')">Parts Browser</v-btn>
-      <v-btn text @click="$router.push('#about')">About</v-btn>
+      <v-btn text @click="$router.push('/guide')">Guide</v-btn>
+      <v-btn text @click="$router.push('/partsbrowser')">Parts Browser</v-btn>
+      <v-btn text @click="$router.push('/about')">About</v-btn>
       <v-btn text @click="logout">Logout</v-btn>
     </v-app-bar>
 
@@ -139,7 +139,7 @@ export default {
       })
     },
     createNewBuild() {
-      // Functionality to create a new build
+      this.$router.push('/newbuild')
     }
   },
   mounted() {

@@ -3,6 +3,9 @@ import WelcomePage from './components/WelcomePage.vue';
 import LoginPage from './components/LoginPage.vue';
 import SignUpPage from './components/SignUpPage.vue';
 import HomePage from './components/HomePage.vue';
+import NewBuildPage from './components/NewBuildPage.vue';
+import GuidePage from './components/GuidePage.vue';
+import PartsBrowse from './components/PartsBrowse.vue';
 
 const routes = [
   {
@@ -24,6 +27,21 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: HomePage,
+  },
+  {
+    path: '/newbuild',
+    name: 'New Build',
+    component: NewBuildPage,
+  },
+  {
+    path: '/guide',
+    name: 'Guide',
+    component: GuidePage,
+  },
+  {
+    path: '/partsbrowser',
+    name: 'Parts Browser',
+    component: PartsBrowse,
   },
 ];
 

@@ -58,6 +58,144 @@
             </v-col>
           </v-row>
         </v-window-item>
+
+        <v-window-item value="motherboard">
+          <v-row>
+            <v-col v-for="mb in filteredMotherboards" :key="mb.id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-title class="text-h6">{{ mb.name }}</v-card-title>
+                <v-card-text>
+                  <div>Price: ${{ mb.price }}</div>
+                  <div>Socket: {{ mb.socket }}</div>
+                  <div>Form Factor: {{ mb.form_factor }}</div>
+                  <div>Max Memory: {{ mb.max_memory }}GB</div>
+                  <div>Memory Slots: {{ mb.memory_slots }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-window-item>
+        <v-window-item value="memory">
+          <v-row>
+            <v-col v-for="ram in filteredMemory" :key="ram.id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-title class="text-h6">{{ ram.name }}</v-card-title>
+                <v-card-text>
+                  <div>Price: ${{ ram.price }}</div>
+                  <div>Speed: {{ ram.speed }} MHz</div>
+                  <div>Modules: {{ ram.modules }}</div>
+                  <div>CAS Latency: {{ ram.cas_latency }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-window-item>
+        <v-window-item value="storage">
+          <v-row>
+            <v-col v-for="hdd in filteredStorage" :key="hdd.id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-title class="text-h6">{{ hdd.name }}</v-card-title>
+                <v-card-text>
+                  <div>Price: ${{ hdd.price }}</div>
+                  <div>Capacity: {{ hdd.capacity }} MHz</div>
+                  <div>Type: {{ hdd.type }}</div>
+                  <div>Interface: {{ hdd.interface }}</div>
+                  <div>Cache: {{ hdd.cache }}</div>
+                  <div>Form Factor: {{ hdd.form_factor }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-window-item>
+        <v-window-item value="psu">
+          <v-row>
+            <v-col v-for="psu in filteredPSUs" :key="psu.id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-title class="text-h6">{{ psu.name }}</v-card-title>
+                <v-card-text>
+                  <div>Price: ${{ psu.price }}</div>
+                  <div>Type: {{ psu.type }}</div>
+                  <div>Efficiency: {{ psu.efficiency }}</div>
+                  <div>Wattage: {{ psu.wattage }}</div>
+                  <div>Modular: {{ psu.modular }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-window-item>
+        <v-window-item value="monitor">
+          <v-row>
+            <v-col v-for="monitor in filteredMonitors" :key="monitor.id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-title class="text-h6">{{ monitor.name }}</v-card-title>
+                <v-card-text>
+                  <div>Price: ${{ monitor.price }}</div>
+                  <div>Screen Size: {{ monitor.screen_size }}</div>
+                  <div>Resolution: {{ monitor.resolution }}</div>
+                  <div>Refresh Rate: {{ monitor.refresh_rate }}</div>
+                  <div>Response Time: {{ monitor.response_time }}</div>
+                  <div>Panel Type: {{ monitor.panel_type }}</div>
+                  <div>Aspect Ratio: {{  monitor.aspect_ratio }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-window-item>
+        <v-window-item value="os">
+          <v-row>
+            <v-col v-for="os in filteredOS" :key="os.id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-title class="text-h6">{{ os.name }}</v-card-title>
+                <v-card-text>
+                  <div>Price: ${{ os.price }}</div>
+                  <div>Mode: {{ os.mode }}</div>
+                  <div>Max Memory: {{ os.max_memory }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-window-item>
+        <v-window-item value="case">
+          <v-row>
+            <v-col v-for="pcCase in filteredCases" :key="pcCase.id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-title class="text-h6">{{ pcCase.name }}</v-card-title>
+                <v-card-text>
+                  <div>Price: ${{ pcCase.price }}</div>
+                  <div>Type: {{ pcCase.type }}</div>
+                  <div>Form Factor: {{  pcCase.form_factor }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-window-item>
+        <v-window-item value="thermal">
+          <v-row>
+            <v-col v-for="tpaste in filteredThermalPaste" :key="tpaste.id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-title class="text-h6">{{ tpaste.name }}</v-card-title>
+                <v-card-text>
+                  <div>Price: ${{ tpaste.price }}</div>
+                  <div>Amount: {{ tpaste.type }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-window-item>
+        <v-window-item value="network">
+          <v-row>
+            <v-col v-for="card in filteredNetworkCards" :key="card.id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-title class="text-h6">{{ card.name }}</v-card-title>
+                <v-card-text>
+                  <div>Price: ${{ card.price }}</div>
+                  <div>Protocol: {{ card.protocol }}</div>
+                  <div>Interface: {{  card.interface }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+        </v-window-item>
       </v-window>
     </v-container>
   </v-app>
@@ -84,22 +222,43 @@ export default {
   },
   computed: {
     filteredCPUs() {
-      if (!this.searchQuery) return this.cpus
-      const query = this.searchQuery.toLowerCase()
-      
-      return this.cpus.filter(cpu => 
-        cpu.name.toLowerCase().includes(query)
-      )
+      return this.filterParts(this.cpus)
     },
     filteredMotherboards() {
-      if (!this.searchQuery) return this.motherboards
-      const query = this.searchQuery.toLowerCase()
-      return this.motherboards.filter(mb => 
-        mb.name.toLowerCase().includes(query)
-      )
+      return this.filterParts(this.motherboards)
+    },
+    filteredMemory() {
+      return this.filterParts(this.memory)
+    },
+    filteredStorage() {
+      return this.filterParts(this.storage)
+    },
+    filteredPSUs() {
+      return this.filterParts(this.psus)
+    },
+    filteredMonitors() {
+      return this.filterParts(this.monitors)
+    },
+    filteredOS() {
+      return this.filterParts(this.os)
+    },
+    filteredCases() {
+      return this.filterParts(this.cases)
+    },
+    filteredThermalPaste() {
+      return this.filterParts(this.thermalPaste)
+    },
+    filteredNetworkCards() {
+      return this.filterParts(this.networkCards)
     }
   },
   methods: {
+    filterParts(parts) {
+      if (!this.searchQuery) return parts
+      const query = this.searchQuery.toLowerCase()
+      return parts.filter((part) => part.name.toLowerCase().includes(query))
+    },
+
     logout() {
       sessionStorage.removeItem('token')
       this.$router.push('/login')

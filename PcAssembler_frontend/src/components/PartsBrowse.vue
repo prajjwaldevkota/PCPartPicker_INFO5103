@@ -176,7 +176,7 @@
                 <v-card-title class="text-h6">{{ tpaste.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ tpaste.price }}</div>
-                  <div>Amount: {{ tpaste.type }}</div>
+                  <div>Amount: {{ tpaste.amount }}</div>
                 </v-card-text>
               </v-card>
             </v-col>

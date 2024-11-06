@@ -13,6 +13,7 @@ type Query {
     getWirelessNetworkCard: [wirelessNetworkCard]
     getMotherboard: [motherboard]
     getBuildsByUser: [Build]
+    getReviews: [Review]
 },
 type User {
     id: ID
@@ -138,6 +139,15 @@ type BuildComponents {
   thermalPaste: thermalPaste
   wirelessNetworkCard: wirelessNetworkCard
 },
+type Review{
+    _id: ID
+    userId: ID
+    componentName: String
+    componentType: String
+    rating: Int
+    comment: String
+    createdAt: String
+},
 type Mutation {
     signup(username:String, email: String, age:String, membership:String, number: String,  password: String): AuthPayload
     login(email: String, password: String): AuthPayload
@@ -165,5 +175,7 @@ type Mutation {
     thermalPastePrice: Float
     wirelessNetworkCardName: String
     wirelessNetworkCardPrice:Float): Build
+    createReview(componentName: String, componentType: String, rating: Int, comment: String): Review
+
 }
 `;

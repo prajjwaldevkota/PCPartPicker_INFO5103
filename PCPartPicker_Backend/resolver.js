@@ -284,19 +284,78 @@ export const resolvers = {
         console.log("No builds found for the user");
         return [];
       }
-      const buildsWithCost = userBuilds.map(build => {
+      const buildsWithCost = userBuilds.map((build) => {
         // Calculate the total cost of the build's components
-        const totalCost = Object.values(build.components).reduce((acc, component) => {
-          return acc + (component.price || 0); // Sum the price of each component
-        }, 0);
-  
+        const totalCost = Object.values(build.components).reduce(
+          (acc, component) => {
+            return acc + (component.price || 0); // Sum the price of each component
+          },
+          0
+        );
+
         // Return the build with the added totalCost field
         return { ...build, totalCost };
       });
-  
-    return buildsWithCost;
+
+      return buildsWithCost;
     } catch (error) {
       console.log("Error occurered in fetching results:", error);
+    }
+  },
+  createReview: async (args) => {
+    try {
+      const idString = await authorizeAndGetUserId();
+      const userId = new ObjectId(idString);
+
+      const db = await dbRtns.getDBInstance();
+      const componentData = await readDataFromJson(
+        args.componentType.toLowerCase()
+      );
+      const componentExists = componentData.some(
+        (component) => component.name === args.componentName
+      );
+
+      if (!componentExists) {
+        throw new Error("Component not found");
+      }
+      const existingReview = await dbRtns.findOne(db, "reviews", {
+        userId: userId,
+        componentName: args.componentName,
+        componentType: args.componentType,
+      });
+
+      if (existingReview) {
+        throw new Error("You have already reviewed this component");
+      }
+
+      const reviewData = {
+        userId: new ObjectId(userId),
+        componentName: args.componentName,
+        componentType: args.componentType,
+        rating: args.rating,
+        comment: args.comment,
+        createdAt: new Date().toISOString(),
+      };
+
+      const result = await dbRtns.addOne(db, "reviews", reviewData);
+      return {
+        id: result.insertedId,
+        ...reviewData,
+      };
+    } catch (error) {
+      console.log("Error occurered in fetching results:", error);
+    }
+  },
+  getReviews: async () => {
+    try {
+      const idString = await authorizeAndGetUserId();
+      const userId = new ObjectId(idString);
+      const db = await dbRtns.getDBInstance();
+      const userReviews = await dbRtns.findAll(db, "reviews", { userId });
+      return userReviews;
+    } catch (error) {
+      console.error("Error occurred in fetching reviews:", error);
+      throw error;
     }
   },
 };

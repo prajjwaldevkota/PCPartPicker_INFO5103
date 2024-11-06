@@ -68,13 +68,13 @@
         componentTypes: [
           {name: "CPU", value: "cpu"},
           {name: "Motherboard", value: "motherboard"},
-          {name: "RAM", value: "ram"},
+          {name: "RAM", value: "memory"},
           {name: "Monitor", value: "monitor"},
-          {name: "Power Supply", value: "psu"},
-          {name: "Storage", value: "storage"},
-          {name: "Case Accessories", value: "accessories"},
-          {name: "Thermal Paste", value: "thermal paste"},
-          {name: "Wireless Network Card", value: "wireless network card"},
+          {name: "Power Supply", value: "power-supply"},
+          {name: "Storage", value: "internal-hard-drive"},
+          {name: "Case Accessories", value: "case-accessory"},
+          {name: "Thermal Paste", value: "thermal-paste"},
+          {name: "Wireless Network Card", value: "wireless-network-card"},
         ],
         componentList: null,
         selectedComponents: {
@@ -146,25 +146,25 @@
           case "motherboard": 
             dataSource = 'getMotherboard'; 
             break;
-          case "ram":
+          case "memory":
             dataSource = 'getMemory'; 
             break;
           case "monitor":
             dataSource = 'getMonitor'; 
             break;
-          case "psu":
+          case "power-supply":
             dataSource = 'getPowerSupply'; 
             break;
-          case "storage":
+          case "internal-hard-drive":
             dataSource = 'getInternalHardDrive';
             break;
-          case "accessories":
+          case "case-accessory":
             dataSource = 'getCaseAccessories';
             break;
-          case "thermal paste":
+          case "thermal-paste":
             dataSource = 'getThermalPaste'; 
             break;
-          case "wireless netword card":
+          case "wireless-network-card":
             dataSource = 'getWirelessNetworkCard'; 
             break;
         }

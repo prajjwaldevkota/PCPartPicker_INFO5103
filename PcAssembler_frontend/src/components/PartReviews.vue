@@ -1,7 +1,7 @@
 <template>
     <v-app>
       <v-container>
-        <v-card class="pa-8">
+        <v-card class="pa-4">
           <v-card-title>Create New PC Build</v-card-title>
           
           <v-form @submit.prevent="saveBuild">

@@ -1,16 +1,6 @@
 <template>
   <v-app>
     <v-container>
-      <v-app-bar>
-        <v-toolbar-title>PC Assembler Parts</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn text @click="$router.push('/home')">Home</v-btn>
-        <v-btn text @click="$router.push('/guide')">Guide</v-btn>
-        <v-btn color="secondary" text @click="$router.push('/partsbrowser')">Parts Browser</v-btn>
-        <v-btn text @click="$router.push('/about')">About</v-btn>
-        <v-btn text @click="logout">Logout</v-btn>
-      </v-app-bar>
-
       <v-row>
         <v-col cols="12" class="mt-15">
           <v-tabs v-model="activeTab" color="primary" align-tabs="center">

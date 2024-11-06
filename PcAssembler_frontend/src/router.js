@@ -6,6 +6,7 @@ import HomePage from './components/HomePage.vue';
 import NewBuildPage from './components/NewBuildPage.vue';
 import GuidePage from './components/GuidePage.vue';
 import PartsBrowse from './components/PartsBrowse.vue';
+import PartReviews from './components/PartReviews.vue';
 
 const routes = [
   {
@@ -42,6 +43,11 @@ const routes = [
     path: '/partsbrowser',
     name: 'Parts Browser',
     component: PartsBrowse,
+  },
+  {
+    path: '/partreviews',
+    name: 'Part Reviews',
+    component: PartReviews,
   },
 ];
 

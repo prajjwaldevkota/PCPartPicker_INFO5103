@@ -4,7 +4,7 @@
       <!-- Building Steps Section -->
       <v-row>
         <v-col cols="12">
-          <v-card class="mb-6">
+          <v-card class="mt-12 mb-6">
             <v-card-title class="text-h5">Step-by-Step Building Process</v-card-title>
             <v-card-text>
               <v-row>

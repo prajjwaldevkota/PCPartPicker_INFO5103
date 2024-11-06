@@ -1,104 +1,57 @@
 <template>
     <v-app>
       <v-container>
-        <v-card class="pa-4">
-          <v-card-title>Create New PC Build</v-card-title>
-          
-          <v-form @submit.prevent="saveBuild">
+        <v-card class="pa-4 mt-12">
+          <v-card-title>Create Review</v-card-title>
+          <v-form @submit.prevent="saveReview" class="mt-6">
+            <v-select
+              v-model="selectedComponents.componentType"
+              @update:modelValue="onSelectComponentType"
+              :items="componentTypes"
+              item-title="name"
+              return-object
+              label="Part Type"
+            ></v-select>
+            <v-select
+              v-if="componentList"
+              v-model="selectedComponents.component"
+              :items="componentList"
+              item-title="name"
+              return-object
+              label="Select Part"
+              filterable
+            ></v-select>
             <v-text-field
-              v-model="buildName"
-              label="Build Name"
+              v-if="selectedComponents.component"
+              v-model="reviewDescription"
+              label="Review Description"
               required
             ></v-text-field>
-  
-            <v-select
-              v-model="selectedComponents.cpu"
-              :items="components.cpus"
-              item-title="name"
-              return-object
-              label="CPU"
-            ></v-select>
-  
-            <v-select
-              v-model="selectedComponents.motherboard"
-              :items="components.motherboards"
-              item-title="name"
-              return-object
-              label="Motherboard"
-            ></v-select>
-  
-            <v-select
-              v-model="selectedComponents.os"
-              :items="components.os"
-              item-title="name"
-              return-object
-              label="Operating System"
-            ></v-select>
-  
-            <v-select
-              v-model="selectedComponents.memory"
-              :items="components.memory"
-              item-title="name"
-              return-object
-              label="Memory"
-            ></v-select>
-  
-            <v-select
-              v-model="selectedComponents.monitor"
-              :items="components.monitors"
-              item-title="name"
-              return-object
-              label="Monitor"
-            ></v-select>
-  
-            <v-select
-              v-model="selectedComponents.powerSupply"
-              :items="components.powerSupplies"
-              item-title="name"
-              return-object
-              label="Power Supply"
-            ></v-select>
-  
-            <v-select
-              v-model="selectedComponents.internalHardDrive"
-              :items="components.internalHardDrives"
-              item-title="name"
-              return-object
-              label="Storage"
-            ></v-select>
-  
-            <v-select
-              v-model="selectedComponents.caseAccessory"
-              :items="components.caseAccessories"
-              item-title="name"
-              return-object
-              label="Case Accessory"
-            ></v-select>
-  
-            <v-select
-              v-model="selectedComponents.thermalPaste"
-              :items="components.thermalPastes"
-              item-title="name"
-              return-object
-              label="Thermal Paste"
-            ></v-select>
-  
-            <v-select
-              v-model="selectedComponents.wirelessNetworkCard"
-              :items="components.wirelessNetworkCards"
-              item-title="name"
-              return-object
-              label="Wireless Network Card"
-            ></v-select>
-  
-            <div class="text-h6 mt-4">Total Cost: ${{ calculateTotalCost }}</div>
-  
+            <v-rating
+              v-if="selectedComponents.component"
+              v-model="rating"
+              hover
+              :length="5"
+              :size="32"
+              active-color="primary"
+            />
             <v-card-actions>
               <v-spacer></v-spacer>
-              <v-btn color="red" type="submit">Save Build</v-btn>
-              <v-btn @click="$router.push('/home')">Cancel</v-btn>
+              <v-btn color="red" type="submit">Save Review</v-btn>
             </v-card-actions>
           </v-form>
+          <v-card-title>Part Reviews</v-card-title>
+          <v-row>
+            <v-col v-for="review in reviews" :key="review._id" cols="12" md="6" lg="4">
+              <v-card class="h-100">
+                <v-card-text>
+                  <div class="text-h6">Review for {{ review.componentName }}</div>
+                  <div>Description: {{ review.comment }}</div>
+                  <div>Rating: {{ review.rating }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
         </v-card>
       </v-container>
     </v-app>
@@ -106,51 +59,48 @@
   
   <script>
   export default {
-    name: 'NewBuildPage',
+    name: 'PartReviews',
     data() {
       return {
-        buildName: '',
-        components: {
-          cpus: [],
-          motherboards: [],
-          os: [],
-          memory: [],
-          monitors: [],
-          powerSupplies: [],
-          internalHardDrives: [],
-          caseAccessories: [],
-          thermalPastes: [],
-          wirelessNetworkCards: []
-        },
+        reviews: [],
+        reviewDescription: "",
+        rating: 0,
+        componentTypes: [
+          {name: "CPU", value: "cpu"},
+          {name: "Motherboard", value: "mobo"},
+          {name: "RAM", value: "ram"},
+          {name: "Monitor", value: "monitor"},
+          {name: "Power Supply", value: "psu"},
+          {name: "Storage", value: "storage"},
+          {name: "Case Accessories", value: "accessories"},
+          {name: "Thermal Paste", value: "thermal paste"},
+          {name: "Wireless Network Card", value: "wireless network card"},
+        ],
+        componentList: null,
         selectedComponents: {
-          cpu: null,
-          motherboard: null,
-          os: null,
-          memory: null,
-          monitor: null,
-          powerSupply: null,
-          internalHardDrive: null,
-          caseAccessory: null,
-          thermalPaste: null,
-          wirelessNetworkCard: null
-        }
-      }
-    },
-    computed: {
-      calculateTotalCost() {
-        let total = 0
-        Object.values(this.selectedComponents).forEach(component => {
-          if (component && component.price) {
-            total += component.price
-          }
-        })
-        return total.toFixed(2)
-      }
-    },
-    methods: {
-      async loadComponents() {
-        const query = `
-          query {
+          componentType: "",
+          component: null,
+        },
+        newReview: {
+          userId: "",
+          componentName: "",
+          componentType: "",
+          rating: 0,
+          comment: ""
+        },
+        queries: {
+          reviewsQuery: `query {
+            getReviews {
+              _id
+              userId
+              componentName
+              componentType
+              rating
+              comment
+              createdAt
+            }
+          }`,
+          cpuQuery: `query {
             getCpus {
               name
               price
@@ -161,6 +111,8 @@
               graphics
               smt
             }
+          }`,
+          moboQuery: `query {
             getMotherboard {
               name
               price
@@ -170,12 +122,8 @@
               memory_slots
               color
             }
-            getOS {
-              name
-              price
-              mode
-              max_memory
-            }
+          }`,
+          ramQuery: `query {
             getMemory {
               name
               price
@@ -185,6 +133,8 @@
               first_word_latency
               cas_latency
             }
+          }`,
+          monitorQuery: `query {
             getMonitor {
               name
               price
@@ -195,6 +145,8 @@
               panel_type
               aspect_ratio
             }
+          }`,
+          psuQuery: `query {
             getPowerSupply {
               name
               price
@@ -204,6 +156,8 @@
               modular
               color
             }
+          }`,
+          storageQuery: `query {
             getInternalHardDrive {
               name
               price
@@ -213,17 +167,23 @@
               cache
               form_factor
             }
+          }`,
+          caseAccessoriesQuery: `query {
             getCaseAccessories {
               name
               price
               type
               form_factor
             }
+          }`,
+          thermalPasteQuery: `query {
             getThermalPaste {
               name
               price
               amount
             }
+          }`,
+          networkCardQuery: `query {
             getWirelessNetworkCard {
               name
               price
@@ -231,8 +191,12 @@
               interface
               color
             }
-          }
-        `
+          }`
+        }
+      }
+    },
+    methods: {
+      async loadData(query = this.queries.reviewsQuery, dataSource = 'getReviews') {
         const token = sessionStorage.getItem('token')
         try {
           const response = await fetch('http://localhost:3045/graphql', {
@@ -245,110 +209,88 @@
           })
           const result = await response.json()
           if (result.data) {
-            this.components = {
-              cpus: result.data.getCpus || [],
-              motherboards: result.data.getMotherboard || [],
-              os: result.data.getOS || [],
-              memory: result.data.getMemory || [],
-              monitors: result.data.getMonitor || [],
-              powerSupplies: result.data.getPowerSupply || [],
-              internalHardDrives: result.data.getInternalHardDrive || [],
-              caseAccessories: result.data.getCaseAccessories || [],
-              thermalPastes: result.data.getThermalPaste || [],
-              wirelessNetworkCards: result.data.getWirelessNetworkCard || []
+            if (query === this.queries.reviewsQuery)
+              this.reviews = result.data[dataSource] || []
+            else {
+              this.componentList = result.data[dataSource] || []
             }
           }
         } catch (error) {
           console.error('Error loading components:', error)
         }
       },
+
+      onSelectComponentType(selectedType) {
+        let query = ''
+        let dataSource = ''
+        
+        switch (selectedType.value) {
+          case "cpu": 
+            query = this.queries.cpuQuery
+            dataSource = 'getCpus'; 
+            break;
+          case "mobo": 
+            query = this.queries.moboQuery
+            dataSource = 'getMotherboard'; 
+            break;
+          case "ram": 
+            query = this.queries.ramQuery
+            dataSource = 'getMemory'; 
+            break;
+          case "monitor": 
+            query = this.queries.monitorQuery
+            dataSource = 'getMonitor'; 
+            break;
+          case "psu": 
+            query = this.queries.psuQuery
+            dataSource = 'getPowerSupply'; 
+            break;
+          case "storage": 
+            query = this.queries.storageQuery
+            dataSource = 'getInternalHardDrive';
+            break;
+          case "accessories": 
+            query = this.queries.caseAccessoriesQuery
+            dataSource = 'getCaseAccessories';
+            break;
+          case "thermal paste": 
+            query = this.queries.thermalPasteQuery
+            dataSource = 'getThermalPaste'; 
+            break;
+          case "wireless netword card": 
+            query = this.queries.networkCardQuery
+            dataSource = 'getWirelessNetworkCard'; 
+            break;
+        }
+
+        this.loadData(query, dataSource)
+      },
   
-      async saveBuild() {
+      async saveReview() {
         const mutation = `
-          mutation SaveBuild(
-            $userId: ID
-            $name: String
-            $cpuName: String
-            $cpuCoreClock: Float
-            $cpuCoreCount: Int
-            $cpuPrice: Float
-            $motherboardName: String
-            $motherboardPrice: Float
-            $osName: String
-            $osPrice: Float
-            $memoryName: String
-            $memoryPrice: Float
-            $monitorName: String
-            $monitorPrice: Float
-            $powerSupplyName: String
-            $powerSupplyPrice: Float
-            $internalHardDriveName: String
-            $internalHardDrivePrice: Float
-            $caseAccessoryName: String
-            $caseAccessoryPrice: Float
-            $thermalPasteName: String
-            $thermalPastePrice: Float
-            $wirelessNetworkCardName: String
-            $wirelessNetworkCardPrice: Float
+          mutation CreateReview(
+            $componentName: String
+            $componentType: String
+            $rating: Int
+            $comment: String
           ) {
-            saveBuild(
-              userId: $userId
-              name: $name
-              cpuName: $cpuName
-              cpuCoreClock: $cpuCoreClock
-              cpuCoreCount: $cpuCoreCount
-              cpuPrice: $cpuPrice
-              motherboardName: $motherboardName
-              motherboardPrice: $motherboardPrice
-              osName: $osName
-              osPrice: $osPrice
-              memoryName: $memoryName
-              memoryPrice: $memoryPrice
-              monitorName: $monitorName
-              monitorPrice: $monitorPrice
-              powerSupplyName: $powerSupplyName
-              powerSupplyPrice: $powerSupplyPrice
-              internalHardDriveName: $internalHardDriveName
-              internalHardDrivePrice: $internalHardDrivePrice
-              caseAccessoryName: $caseAccessoryName
-              caseAccessoryPrice: $caseAccessoryPrice
-              thermalPasteName: $thermalPasteName
-              thermalPastePrice: $thermalPastePrice
-              wirelessNetworkCardName: $wirelessNetworkCardName
-              wirelessNetworkCardPrice: $wirelessNetworkCardPrice
+            createReview(
+              componentName: $componentName
+              componentType: $componentType
+              rating: $rating
+              comment: $comment
             ) {
-              id
-              name
+              _id
             }
           }
         `
         const token = sessionStorage.getItem('token')
         try {
           const variables = {
-            userId: sessionStorage.getItem('userId'),
-            name: this.buildName,
-            cpuName: this.selectedComponents.cpu?.name,
-            cpuCoreClock: this.selectedComponents.cpu?.core_clock,
-            cpuCoreCount: this.selectedComponents.cpu?.core_count,
-            cpuPrice: this.selectedComponents.cpu?.price,
-            motherboardName: this.selectedComponents.motherboard?.name,
-            motherboardPrice: this.selectedComponents.motherboard?.price,
-            osName: this.selectedComponents.os?.name,
-            osPrice: this.selectedComponents.os?.price,
-            memoryName: this.selectedComponents.memory?.name,
-            memoryPrice: this.selectedComponents.memory?.price,
-            monitorName: this.selectedComponents.monitor?.name,
-            monitorPrice: this.selectedComponents.monitor?.price,
-            powerSupplyName: this.selectedComponents.powerSupply?.name,
-            powerSupplyPrice: this.selectedComponents.powerSupply?.price,
-            internalHardDriveName: this.selectedComponents.internalHardDrive?.name,
-            internalHardDrivePrice: this.selectedComponents.internalHardDrive?.price,
-            caseAccessoryName: this.selectedComponents.caseAccessory?.name,
-            caseAccessoryPrice: this.selectedComponents.caseAccessory?.price,
-            thermalPasteName: this.selectedComponents.thermalPaste?.name,
-            thermalPastePrice: this.selectedComponents.thermalPaste?.price,
-            wirelessNetworkCardName: this.selectedComponents.wirelessNetworkCard?.name,
-            wirelessNetworkCardPrice: this.selectedComponents.wirelessNetworkCard?.price
+            componentName: this.selectedComponents.component.name,
+            componentType: this.selectedComponents.componentType.value,
+            rating: this.rating,
+            comment: this.reviewDescription
           }
   
           const response = await fetch('http://localhost:3045/graphql', {
@@ -364,7 +306,12 @@
           })
           const result = await response.json()
           if (result.data) {
-            this.$router.push('/home')
+            this.reviews.push({
+              componentName: variables.componentName,
+              componentType: variables.componentType,
+              rating: variables.rating,
+              comment: variables.comment
+            })
           }
         } catch (error) {
           console.error('Error saving build:', error)
@@ -372,7 +319,7 @@
       }
     },
     mounted() {
-      this.loadComponents()
+      this.loadData()
     }
   }
   </script>

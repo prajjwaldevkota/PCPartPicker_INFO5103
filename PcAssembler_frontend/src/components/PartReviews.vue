@@ -88,68 +88,31 @@
           rating: 0,
           comment: ""
         },
-        queries: {
-          reviewsQuery: `query {
-            getReviews {
-              _id
-              userId
-              componentName
-              componentType
-              rating
-              comment
-              createdAt
-            }
-          }`,
-          cpuQuery: `query {
-            getCpus {
-              name
-            }
-          }`,
-          moboQuery: `query {
-            getMotherboard {
-              name
-            }
-          }`,
-          ramQuery: `query {
-            getMemory {
-              name
-            }
-          }`,
-          monitorQuery: `query {
-            getMonitor {
-              name
-            }
-          }`,
-          psuQuery: `query {
-            getPowerSupply {
-              name
-            }
-          }`,
-          storageQuery: `query {
-            getInternalHardDrive {
-              name
-            }
-          }`,
-          caseAccessoriesQuery: `query {
-            getCaseAccessories {
-              name
-            }
-          }`,
-          thermalPasteQuery: `query {
-            getThermalPaste {
-              name
-            }
-          }`,
-          networkCardQuery: `query {
-            getWirelessNetworkCard {
+        reviewsQuery: `query {
+          getReviews {
+            _id
+            userId
+            componentName
+            componentType
+            rating
+            comment
+            createdAt
+          }
+        }`,
+      }
+    },
+    methods: {
+      async loadData(dataSource = 'getReviews') {
+        let query = ''
+        if (dataSource === 'getReviews') {
+          query = this.reviewsQuery
+        } else {
+          query = `query {
+             ${dataSource} {
               name
             }
           }`
         }
-      }
-    },
-    methods: {
-      async loadData(query = this.queries.reviewsQuery, dataSource = 'getReviews') {
         const token = sessionStorage.getItem('token')
         try {
           const response = await fetch('http://localhost:3045/graphql', {
@@ -162,7 +125,7 @@
           })
           const result = await response.json()
           if (result.data) {
-            if (query === this.queries.reviewsQuery) {
+            if (query === this.reviewsQuery) {
               this.reviews = result.data[dataSource] || []
             } else {
               this.componentList = result.data[dataSource] || []
@@ -174,49 +137,39 @@
       },
 
       onSelectComponentType(selectedType) {
-        let query = ''
         let dataSource = ''
         
         switch (selectedType.value) {
           case "cpu": 
-            query = this.queries.cpuQuery
             dataSource = 'getCpus'; 
             break;
           case "motherboard": 
-            query = this.queries.moboQuery
             dataSource = 'getMotherboard'; 
             break;
-          case "ram": 
-            query = this.queries.ramQuery
+          case "ram":
             dataSource = 'getMemory'; 
             break;
-          case "monitor": 
-            query = this.queries.monitorQuery
+          case "monitor":
             dataSource = 'getMonitor'; 
             break;
-          case "psu": 
-            query = this.queries.psuQuery
+          case "psu":
             dataSource = 'getPowerSupply'; 
             break;
-          case "storage": 
-            query = this.queries.storageQuery
+          case "storage":
             dataSource = 'getInternalHardDrive';
             break;
-          case "accessories": 
-            query = this.queries.caseAccessoriesQuery
+          case "accessories":
             dataSource = 'getCaseAccessories';
             break;
-          case "thermal paste": 
-            query = this.queries.thermalPasteQuery
+          case "thermal paste":
             dataSource = 'getThermalPaste'; 
             break;
-          case "wireless netword card": 
-            query = this.queries.networkCardQuery
+          case "wireless netword card":
             dataSource = 'getWirelessNetworkCard'; 
             break;
         }
 
-        this.loadData(query, dataSource)
+        this.loadData(dataSource)
       },
   
       async saveReview() {

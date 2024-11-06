@@ -47,7 +47,7 @@
                 <v-card-text>
                   <div class="text-h6">Review for {{ review.componentName }}</div>
                   <div>Description: {{ review.comment }}</div>
-                  <div>Rating: {{ review.rating }}</div>
+                  <div>Rating: {{ review.rating }}/5</div>
                 </v-card-text>
               </v-card>
             </v-col>

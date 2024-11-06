@@ -67,7 +67,7 @@
         rating: 0,
         componentTypes: [
           {name: "CPU", value: "cpu"},
-          {name: "Motherboard", value: "mobo"},
+          {name: "Motherboard", value: "motherboard"},
           {name: "RAM", value: "ram"},
           {name: "Monitor", value: "monitor"},
           {name: "Power Supply", value: "psu"},
@@ -103,93 +103,46 @@
           cpuQuery: `query {
             getCpus {
               name
-              price
-              core_clock
-              core_count
-              boost_clock
-              tdp
-              graphics
-              smt
             }
           }`,
           moboQuery: `query {
             getMotherboard {
               name
-              price
-              socket
-              form_factor
-              max_memory
-              memory_slots
-              color
             }
           }`,
           ramQuery: `query {
             getMemory {
               name
-              price
-              speed
-              modules
-              color
-              first_word_latency
-              cas_latency
             }
           }`,
           monitorQuery: `query {
             getMonitor {
               name
-              price
-              screen_size
-              resolution
-              refresh_rate
-              response_time
-              panel_type
-              aspect_ratio
             }
           }`,
           psuQuery: `query {
             getPowerSupply {
               name
-              price
-              type
-              efficiency
-              wattage
-              modular
-              color
             }
           }`,
           storageQuery: `query {
             getInternalHardDrive {
               name
-              price
-              capacity
-              type
-              interface
-              cache
-              form_factor
             }
           }`,
           caseAccessoriesQuery: `query {
             getCaseAccessories {
               name
-              price
-              type
-              form_factor
             }
           }`,
           thermalPasteQuery: `query {
             getThermalPaste {
               name
-              price
-              amount
             }
           }`,
           networkCardQuery: `query {
             getWirelessNetworkCard {
               name
-              price
-              protocol
-              interface
-              color
             }
           }`
         }
@@ -209,9 +162,9 @@
           })
           const result = await response.json()
           if (result.data) {
-            if (query === this.queries.reviewsQuery)
+            if (query === this.queries.reviewsQuery) {
               this.reviews = result.data[dataSource] || []
-            else {
+            } else {
               this.componentList = result.data[dataSource] || []
             }
           }
@@ -229,7 +182,7 @@
             query = this.queries.cpuQuery
             dataSource = 'getCpus'; 
             break;
-          case "mobo": 
+          case "motherboard": 
             query = this.queries.moboQuery
             dataSource = 'getMotherboard'; 
             break;

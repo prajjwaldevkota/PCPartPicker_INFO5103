@@ -28,11 +28,13 @@ const routes = [
     path: '/home',
     name: 'Home',
     component: HomePage,
+    meta: {requiresAuth: true},
   },
   {
     path: '/newbuild',
     name: 'New Build',
     component: NewBuildPage,
+    meta: {requiresAuth: true},
   },
   {
     path: '/guide',
@@ -48,12 +50,25 @@ const routes = [
     path: '/partreviews',
     name: 'Part Reviews',
     component: PartReviews,
+    meta: {requiresAuth: true},
   },
 ];
 
 const router = createRouter({
   history: createWebHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  const token = sessionStorage.getItem('token');
+  
+  // If route requires authentication and no token is found, redirect to login page
+  if (to.matched.some(record => record.meta.requiresAuth) && !token) {
+    next({ name: 'Login' });
+    alert('Please login to get access.')
+  } else {
+    next();
+  }
 });
 
 export default router;

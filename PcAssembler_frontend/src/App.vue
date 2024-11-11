@@ -19,6 +19,12 @@
 <script>
 export default {
   name: 'App',
+  methods: {
+    logout() {
+      sessionStorage.removeItem('token');
+      this.$router.push('/login');
+    }
+}
 };
 </script>
 

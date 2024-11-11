@@ -1,0 +1,60 @@
+//this should be in the each part with there respected name
+ <v-card @click="openModal(cpu)" class="h-100">
+
+
+ <v-card @click="openModal(mb)" class="h-100">
+
+ <v-card @click="openModal(ram)" class="h-100">
+and so on...
+
+
+
+
+
+
+
+<v-dialog v-model="modalVisible" max-width="600px">
+  <v-card>
+    <v-card-title class="headline">{{ selectedPart ? selectedPart.name : 'Part Details' }}</v-card-title>
+    <v-card-text>
+      <div v-if="selectedPart">
+        <div v-if="selectedPart.price">Price: ${{ selectedPart.price }}</div>
+        <div v-if="selectedPart.core_count">Core Count: {{ selectedPart.core_count }}</div>
+        <div v-if="selectedPart.core_clock">Core Clock: {{ selectedPart.core_clock }}GHz</div>
+        <div v-if="selectedPart.boost_clock">Boost Clock: {{ selectedPart.boost_clock }}GHz</div>
+        <div v-if="selectedPart.tdp">TDP: {{ selectedPart.tdp }}W</div>
+        <div v-if="selectedPart.graphics">Graphics: {{ selectedPart.graphics }}</div>
+        <div v-if="selectedPart.smt !== undefined">SMT: {{ selectedPart.smt ? 'Enabled' : 'Disabled' }}</div>
+        <div v-if="selectedPart.socket">Socket Type: {{ selectedPart.socket }}</div>
+        <div v-if="selectedPart.max_memory">Max Memory: {{ selectedPart.max_memory }} GB</div>
+        <div v-if="selectedPart.memory_slots">Memory Slots: {{ selectedPart.memory_slots }}</div>
+        <div v-if="selectedPart.speed">Memory Speed: {{ selectedPart.speed[1] }} MHz</div>
+        <div v-if="selectedPart.modules">Modules: {{ selectedPart.modules[0] }} x {{ selectedPart.modules[1] }} GB</div>
+        <div v-if="selectedPart.cas_latency">CAS Latency: {{ selectedPart.cas_latency }}</div>
+        <div v-if="selectedPart.color">Color: {{ selectedPart.color }}</div>
+        <div v-if="selectedPart.efficiency">Efficiency: {{ selectedPart.efficiency }}</div>
+        <div v-if="selectedPart.wattage">Wattage: {{ selectedPart.wattage }}W</div>
+        <div v-if="selectedPart.modular">Modular: {{ selectedPart.modular }}</div>
+        <div v-if="selectedPart.screen_size">Screen Size: {{ selectedPart.screen_size }} inches</div>
+        <div v-if="selectedPart.resolution">Resolution: {{ selectedPart.resolution[0] }}x{{ selectedPart.resolution[1] }}</div>
+        <div v-if="selectedPart.refresh_rate">Refresh Rate: {{ selectedPart.refresh_rate }} Hz</div>
+        <div v-if="selectedPart.response_time">Response Time: {{ selectedPart.response_time }} ms</div>
+        <div v-if="selectedPart.panel_type">Panel Type: {{ selectedPart.panel_type }}</div>
+        <div v-if="selectedPart.aspect_ratio">Aspect Ratio: {{ selectedPart.aspect_ratio }}</div>
+        <div v-if="selectedPart.mode">Mode: {{ selectedPart.mode }}-bit</div>
+        <div v-if="selectedPart.amount">Amount: {{ selectedPart.amount }} g</div>
+        <div v-if="selectedPart.protocol">Protocol: {{ selectedPart.protocol }}</div>
+        <div v-if="selectedPart.capacity">Capacity: {{ selectedPart.capacity }} GB</div>
+        <div v-if="selectedPart.price_per_gb">Price per GB: ${{ selectedPart.price_per_gb }}</div>
+        <div v-if="selectedPart.type">Type: {{ selectedPart.type }}</div>
+        <div v-if="selectedPart.cache">Cache: {{ selectedPart.cache }} MB</div>
+        <div v-if="selectedPart.form_factor">Form Factor: {{ selectedPart.form_factor }}</div>
+        <div v-if="selectedPart.interface">Interface: {{ selectedPart.interface }}</div>
+      </div>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn @click="closeModal" color="primary">Close</v-btn>
+      <v-btn color="primary" @click="addToCart(selectedPart)">Add to Cart</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>

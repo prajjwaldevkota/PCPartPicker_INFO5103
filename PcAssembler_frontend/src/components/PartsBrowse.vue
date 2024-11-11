@@ -1,15 +1,6 @@
 <template>
   <v-app>
     <v-container>
-      <v-app-bar>
-        <v-toolbar-title>PC Assembler Parts</v-toolbar-title>
-        <v-spacer></v-spacer>
-        <v-btn text @click="$router.push('/home')">Home</v-btn>
-        <v-btn text @click="$router.push('/guide')">Guide</v-btn>
-        <v-btn color="secondary" text @click="$router.push('/partsbrowser')">Parts Browser</v-btn>
-        <v-btn text @click="$router.push('/about')">About</v-btn>
-        <v-btn text @click="logout">Logout</v-btn>
-      </v-app-bar>
 
       <v-row>
         <v-col cols="12" class="mt-15">
@@ -215,8 +206,8 @@
       </div>
     </v-card-text>
     <v-card-actions>
-      <v-btn @click="closeModal" color="primary">Close</v-btn>
-      <v-btn color="primary" @click="addToCart(selectedPart)">Add to Cart</v-btn>
+      <v-btn @click="closeModal" color="red" class = "btn">Close</v-btn>
+      <v-btn color="grey" @click="addToCart(selectedPart)" class = "btn">Add to Cart</v-btn>
     </v-card-actions>
   </v-card>
 </v-dialog>
@@ -430,4 +421,6 @@ export default {
 .h-100 {
   height: 100%;
 }
+
 </style>
+

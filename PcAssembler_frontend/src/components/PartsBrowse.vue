@@ -1,6 +1,16 @@
 <template>
   <v-app>
     <v-container>
+      <v-app-bar>
+        <v-toolbar-title>PC Assembler Parts</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-btn text @click="$router.push('/home')">Home</v-btn>
+        <v-btn text @click="$router.push('/guide')">Guide</v-btn>
+        <v-btn color="secondary" text @click="$router.push('/partsbrowser')">Parts Browser</v-btn>
+        <v-btn text @click="$router.push('/about')">About</v-btn>
+        <v-btn text @click="logout">Logout</v-btn>
+      </v-app-bar>
+
       <v-row>
         <v-col cols="12" class="mt-15">
           <v-tabs v-model="activeTab" color="primary" align-tabs="center">
@@ -35,14 +45,11 @@
         <v-window-item value="cpu">
           <v-row>
             <v-col v-for="cpu in filteredCPUs" :key="cpu.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(cpu)" class="h-100">
                 <v-card-title class="text-h6">{{ cpu.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ cpu.price }}</div>
-                  <div>Core Count: {{ cpu.core_count }}</div>
-                  <div>Core Clock: {{ cpu.core_clock }}GHz</div>
-                  <div>Boost Clock: {{ cpu.boost_clock }}GHz</div>
-                  <div>TDP: {{ cpu.tdp }}W</div>
+                  
                 </v-card-text>
               </v-card>
             </v-col>
@@ -52,14 +59,11 @@
         <v-window-item value="motherboard">
           <v-row>
             <v-col v-for="mb in filteredMotherboards" :key="mb.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(mb)" class="h-100">
                 <v-card-title class="text-h6">{{ mb.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ mb.price }}</div>
-                  <div>Socket: {{ mb.socket }}</div>
-                  <div>Form Factor: {{ mb.form_factor }}</div>
-                  <div>Max Memory: {{ mb.max_memory }}GB</div>
-                  <div>Memory Slots: {{ mb.memory_slots }}</div>
+                  
                 </v-card-text>
               </v-card>
             </v-col>
@@ -68,13 +72,11 @@
         <v-window-item value="memory">
           <v-row>
             <v-col v-for="ram in filteredMemory" :key="ram.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(ram)" class="h-100">
                 <v-card-title class="text-h6">{{ ram.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ ram.price }}</div>
-                  <div>Speed: {{ ram.speed }} MHz</div>
-                  <div>Modules: {{ ram.modules }}</div>
-                  <div>CAS Latency: {{ ram.cas_latency }}</div>
+                  
                 </v-card-text>
               </v-card>
             </v-col>
@@ -83,15 +85,11 @@
         <v-window-item value="storage">
           <v-row>
             <v-col v-for="hdd in filteredStorage" :key="hdd.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(hdd)" class="h-100">
                 <v-card-title class="text-h6">{{ hdd.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ hdd.price }}</div>
-                  <div>Capacity: {{ hdd.capacity }} MHz</div>
-                  <div>Type: {{ hdd.type }}</div>
-                  <div>Interface: {{ hdd.interface }}</div>
-                  <div>Cache: {{ hdd.cache }}</div>
-                  <div>Form Factor: {{ hdd.form_factor }}</div>
+                 
                 </v-card-text>
               </v-card>
             </v-col>
@@ -100,14 +98,11 @@
         <v-window-item value="psu">
           <v-row>
             <v-col v-for="psu in filteredPSUs" :key="psu.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(psu)" class="h-100">
                 <v-card-title class="text-h6">{{ psu.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ psu.price }}</div>
-                  <div>Type: {{ psu.type }}</div>
-                  <div>Efficiency: {{ psu.efficiency }}</div>
-                  <div>Wattage: {{ psu.wattage }}</div>
-                  <div>Modular: {{ psu.modular }}</div>
+                  
                 </v-card-text>
               </v-card>
             </v-col>
@@ -116,16 +111,11 @@
         <v-window-item value="monitor">
           <v-row>
             <v-col v-for="monitor in filteredMonitors" :key="monitor.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(monitor)" class="h-100">
                 <v-card-title class="text-h6">{{ monitor.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ monitor.price }}</div>
-                  <div>Screen Size: {{ monitor.screen_size }}</div>
-                  <div>Resolution: {{ monitor.resolution }}</div>
-                  <div>Refresh Rate: {{ monitor.refresh_rate }}</div>
-                  <div>Response Time: {{ monitor.response_time }}</div>
-                  <div>Panel Type: {{ monitor.panel_type }}</div>
-                  <div>Aspect Ratio: {{  monitor.aspect_ratio }}</div>
+                 
                 </v-card-text>
               </v-card>
             </v-col>
@@ -134,12 +124,11 @@
         <v-window-item value="os">
           <v-row>
             <v-col v-for="os in filteredOS" :key="os.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(os)" class="h-100">
                 <v-card-title class="text-h6">{{ os.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ os.price }}</div>
-                  <div>Mode: {{ os.mode }}</div>
-                  <div>Max Memory: {{ os.max_memory }}</div>
+                  
                 </v-card-text>
               </v-card>
             </v-col>
@@ -148,12 +137,11 @@
         <v-window-item value="case">
           <v-row>
             <v-col v-for="pcCase in filteredCases" :key="pcCase.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(pcCase)" class="h-100">
                 <v-card-title class="text-h6">{{ pcCase.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ pcCase.price }}</div>
-                  <div>Type: {{ pcCase.type }}</div>
-                  <div>Form Factor: {{  pcCase.form_factor }}</div>
+                  
                 </v-card-text>
               </v-card>
             </v-col>
@@ -162,11 +150,11 @@
         <v-window-item value="thermal">
           <v-row>
             <v-col v-for="tpaste in filteredThermalPaste" :key="tpaste.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(tpaste)" class="h-100">
                 <v-card-title class="text-h6">{{ tpaste.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ tpaste.price }}</div>
-                  <div>Amount: {{ tpaste.amount }}</div>
+                  
                 </v-card-text>
               </v-card>
             </v-col>
@@ -175,18 +163,66 @@
         <v-window-item value="network">
           <v-row>
             <v-col v-for="card in filteredNetworkCards" :key="card.id" cols="12" md="6" lg="4">
-              <v-card class="h-100">
+              <v-card @click="openModal(card)" class="h-100">
                 <v-card-title class="text-h6">{{ card.name }}</v-card-title>
                 <v-card-text>
                   <div>Price: ${{ card.price }}</div>
-                  <div>Protocol: {{ card.protocol }}</div>
-                  <div>Interface: {{  card.interface }}</div>
+                 
                 </v-card-text>
               </v-card>
             </v-col>
           </v-row>
         </v-window-item>
       </v-window>
+      <v-dialog v-model="modalVisible" max-width="600px">
+  <v-card>
+    <v-card-title class="headline">{{ selectedPart ? selectedPart.name : 'Part Details' }}</v-card-title>
+    <v-card-text>
+      <div v-if="selectedPart">
+        <div v-if="selectedPart.price">Price: ${{ selectedPart.price }}</div>
+        <div v-if="selectedPart.core_count">Core Count: {{ selectedPart.core_count }}</div>
+        <div v-if="selectedPart.core_clock">Core Clock: {{ selectedPart.core_clock }}GHz</div>
+        <div v-if="selectedPart.boost_clock">Boost Clock: {{ selectedPart.boost_clock }}GHz</div>
+        <div v-if="selectedPart.tdp">TDP: {{ selectedPart.tdp }}W</div>
+        <div v-if="selectedPart.graphics">Graphics: {{ selectedPart.graphics }}</div>
+        <div v-if="selectedPart.smt !== undefined">SMT: {{ selectedPart.smt ? 'Enabled' : 'Disabled' }}</div>
+        <div v-if="selectedPart.socket">Socket Type: {{ selectedPart.socket }}</div>
+        <div v-if="selectedPart.max_memory">Max Memory: {{ selectedPart.max_memory }} GB</div>
+        <div v-if="selectedPart.memory_slots">Memory Slots: {{ selectedPart.memory_slots }}</div>
+        <div v-if="selectedPart.speed">Memory Speed: {{ selectedPart.speed[1] }} MHz</div>
+        <div v-if="selectedPart.modules">Modules: {{ selectedPart.modules[0] }} x {{ selectedPart.modules[1] }} GB</div>
+        <div v-if="selectedPart.cas_latency">CAS Latency: {{ selectedPart.cas_latency }}</div>
+        <div v-if="selectedPart.color">Color: {{ selectedPart.color }}</div>
+        <div v-if="selectedPart.efficiency">Efficiency: {{ selectedPart.efficiency }}</div>
+        <div v-if="selectedPart.wattage">Wattage: {{ selectedPart.wattage }}W</div>
+        <div v-if="selectedPart.modular">Modular: {{ selectedPart.modular }}</div>
+        <div v-if="selectedPart.screen_size">Screen Size: {{ selectedPart.screen_size }} inches</div>
+        <div v-if="selectedPart.resolution">Resolution: {{ selectedPart.resolution[0] }}x{{ selectedPart.resolution[1] }}</div>
+        <div v-if="selectedPart.refresh_rate">Refresh Rate: {{ selectedPart.refresh_rate }} Hz</div>
+        <div v-if="selectedPart.response_time">Response Time: {{ selectedPart.response_time }} ms</div>
+        <div v-if="selectedPart.panel_type">Panel Type: {{ selectedPart.panel_type }}</div>
+        <div v-if="selectedPart.aspect_ratio">Aspect Ratio: {{ selectedPart.aspect_ratio }}</div>
+        <div v-if="selectedPart.mode">Mode: {{ selectedPart.mode }}-bit</div>
+        <div v-if="selectedPart.amount">Amount: {{ selectedPart.amount }} g</div>
+        <div v-if="selectedPart.protocol">Protocol: {{ selectedPart.protocol }}</div>
+        <div v-if="selectedPart.capacity">Capacity: {{ selectedPart.capacity }} GB</div>
+        <div v-if="selectedPart.price_per_gb">Price per GB: ${{ selectedPart.price_per_gb }}</div>
+        <div v-if="selectedPart.type">Type: {{ selectedPart.type }}</div>
+        <div v-if="selectedPart.cache">Cache: {{ selectedPart.cache }} MB</div>
+        <div v-if="selectedPart.form_factor">Form Factor: {{ selectedPart.form_factor }}</div>
+        <div v-if="selectedPart.interface">Interface: {{ selectedPart.interface }}</div>
+
+      </div>
+    </v-card-text>
+    <v-card-actions>
+      <v-btn @click="closeModal" color="primary">Close</v-btn>
+      <v-btn color="primary" @click="addToCart(selectedPart)">Add to Cart</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
+
+
+
     </v-container>
   </v-app>
 </template>
@@ -207,7 +243,9 @@ export default {
       os: [],
       cases: [],
       thermalPaste: [],
-      networkCards: []
+      networkCards: [],
+      modalVisible: false, // Controls whether the modal is open or not
+      selectedPart: null, // Stores the part data for the modal
     }
   },
   computed: {
@@ -248,6 +286,14 @@ export default {
       const query = this.searchQuery.toLowerCase()
       return parts.filter((part) => part.name.toLowerCase().includes(query))
     },
+    openModal(part) {
+    this.selectedPart = part;  // This should be set once for each part clicked
+  
+    this.modalVisible = true; // This will open the modal
+  },
+  closeModal() {
+    this.modalVisible = false; // This will close the modal
+  },
 
     logout() {
       sessionStorage.removeItem('token')

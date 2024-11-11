@@ -22,7 +22,8 @@ export default {
   methods: {
     logout() {
       sessionStorage.removeItem('token');
-      this.$router.push('/login');
+      this.$router.push('/');
+      alert('You are being logged out.');
     }
 }
 };

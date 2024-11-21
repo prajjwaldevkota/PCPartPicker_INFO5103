@@ -29,6 +29,10 @@ type AuthPayload {
     user: User
     errorMessage: String 
 },
+type Admin {
+    adminName: String,
+    password: String
+},
 type CPU {
     name: String
     price: Float
@@ -176,6 +180,7 @@ type Mutation {
     wirelessNetworkCardName: String
     wirelessNetworkCardPrice:Float): Build
     createReview(componentName: String, componentType: String, rating: Int, comment: String): Review
-
+    AdminSignup ( adminName: String,  password: String): AuthPayload
+    AdminLogin (adminName:String , password:String): AuthPayload
 }
 `;

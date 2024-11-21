@@ -358,4 +358,96 @@ export const resolvers = {
       throw error;
     }
   },
+  AdminSignup: async (args) => {
+    try {
+      const db = await dbRtns.getDBInstance();
+      /*Validation*/
+      var message = "";
+      if (args.adminName == "" || args.adminName == undefined) {
+        message += "First name field is required.";
+      }
+
+      if (args.password == "" || args.password == undefined) {
+        message += "\nPassword field is required.";
+      } else if (args.adminName != "") {
+        if (args.password.length < 8) {
+          message += "\n Password must be at least 8 characters long.";
+        }
+      }
+
+      if (message !== "") {
+        return {
+          errorMessage: message,
+        };
+      }
+      const hashedPassword = await bcrypt.hash(args.password, 10);
+      const authData = {
+        adminName: args.adminName,
+        password: hashedPassword, // Store hashed password
+      };
+
+      const token = jwt.sign({ email: args.email }, cfg.jwtSecret, {
+        expiresIn: "1h",
+      });
+
+      let authResult = await dbRtns.addOne(db, "ADMINAUTH", authData);
+
+      return { token, admin: authData };
+    } catch (error) {
+      // Handle any errors that occur
+      console.error("Error occurred in fetching results:", error);
+      return {
+        errorMessage: `An error occurred when trying to signup.`,
+      };
+    }
+  },
+  AdminLogin: async (args) => {
+    try {
+      /*Validation*/
+
+      var message = "";
+      if (args.adminName == "" || args.adminName == undefined) {
+        message += "username field is required.";
+      }
+      if (args.password == "" || args.password == undefined) {
+        message += "\nPassword field is required.";
+      }
+      if (message !== "") {
+        return {
+          errorMessage: message,
+        };
+      }
+      const db = await dbRtns.getDBInstance();
+      const admin = await dbRtns.findOne(db, "ADMINAUTH", {
+        adminName: args.adminName,
+      });
+      if (!admin) {
+        return {
+          errorMessage: `Admin with name '${args.adminName}' wasn't found.`,
+        };
+      }
+      // Compare the password provided in the arguments with the hashed password stored in the database
+      const passwordMatch = await bcrypt.compare(args.password, admin.password);
+      if (!passwordMatch) {
+        return {
+          errorMessage: `Admin exists, but incorrect password.`,
+        };
+      }
+
+      // If password matches, generate JWT token
+      //   const token = jwt.sign({ userId: user._id }, cfg.jwtSecret);
+      const token = jwt.sign({ adminId: admin._id }, cfg.jwtSecret);
+
+      // Return token and user information
+      return {
+        token,
+        admin: {
+          adminName: admin.adminName,
+          password: admin.password,
+        },
+      };
+    } catch {
+      console.log("Here is your error");
+    }
+  },
 };

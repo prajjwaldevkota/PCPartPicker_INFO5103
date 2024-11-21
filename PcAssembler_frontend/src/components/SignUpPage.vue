@@ -1,24 +1,26 @@
 <template>
-  <div class="signup-container">
-    <h1>Sign Up</h1>
-    <form @submit.prevent="handleSubmit">
-      <div class="form-group">
-        <input type="text" id="username" v-model="username" required placeholder="Username" />
-      </div>
-      <div class="form-group">
-        <input type="email" id="email" v-model="email" required placeholder="Email" />
-      </div>
-      <div class="form-group">
-        <input type="password" id="password" v-model="password" required placeholder="Password" />
-      </div>
-      <div class="button-container">
-        <button type="submit" class="submit-button">Sign Up</button>
-        <button type="button" class="back-button" @click="goBack">Back</button>
-      </div>
-    </form>
-    <p class="already-account">
-      Already have an account? <a href="/login" class="login-link">Login here</a>
-    </p>
+  <div class="signup-page">
+    <div class="signup-container">
+      <h1>Sign Up</h1>
+      <form @submit.prevent="handleSubmit">
+        <div class="form-group">
+          <input type="text" id="username" v-model="username" required placeholder="Username" />
+        </div>
+        <div class="form-group">
+          <input type="email" id="email" v-model="email" required placeholder="Email" />
+        </div>
+        <div class="form-group">
+          <input type="password" id="password" v-model="password" required placeholder="Password" />
+        </div>
+        <div class="button-container">
+          <button type="submit" class="submit-button">Sign Up</button>
+          <button type="button" class="back-button" @click="goBack">Back</button>
+        </div>
+      </form>
+      <p class="already-account">
+        Already have an account? <a href="/login" class="login-link">Login here</a>
+      </p>
+    </div>
   </div>
 </template>
 
@@ -88,15 +90,22 @@ export default {
 </script>
 
 <style>
+.signup-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
 .signup-container {
-  margin-top: 28vh;
-  max-width: 400px;
+  max-width: 100vh;
   padding: 75px 150px; /* Adjusted padding */
   background: linear-gradient(135deg, #4b6cb7, #182848); /* Gradient background */
   color: #fff; /* White text */
   border-radius: 10px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
   font-family: 'Arial', sans-serif; /* Use a modern font */
+  text-align: center;
 }
 
 h1 {

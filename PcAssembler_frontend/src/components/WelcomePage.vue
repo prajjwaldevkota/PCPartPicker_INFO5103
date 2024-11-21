@@ -54,7 +54,7 @@ export default {
       this.$router.push({ name: 'Sign Up' }) // Redirect to Signup page
     },
     enterAsGuest() {
-      alert('Entering as guest...')
+      this.$router.push({ name: 'Parts Browser' })
     }
   }
 }

@@ -37,30 +37,23 @@
 </template>
 
 <script>
+import { showSnackbar, snackbar } from './snackbar';
+
 export default {
   name: 'App',
   data() {
     return {
-      snackbar: {
-        show: false,
-        text: '',
-        color: 'success'
-      }
+      snackbar,
     }
   },
   methods: {
-    showNotification(text, color = 'success') {
-      this.snackbar.text = text;
-      this.snackbar.color = color;
-      this.snackbar.show = true;
-    },
     
     logout() {
       if(sessionStorage.getItem('token')!=null) {
         sessionStorage.removeItem('token'); 
-        this.showNotification('Successfully logged out', 'info');
+        showSnackbar('Successfully logged out', 'info');
       }else{
-        this.showNotification('You are not logged in', 'error');
+        showSnackbar('You are not logged in', 'error');
       }
         setTimeout(() => {
         this.$router.push('/');

@@ -7,6 +7,7 @@ import NewBuildPage from './components/NewBuildPage.vue';
 import GuidePage from './components/GuidePage.vue';
 import PartsBrowse from './components/PartsBrowse.vue';
 import PartReviews from './components/PartReviews.vue';
+import { showSnackbar } from './snackbar';
 
 const routes = [
   {
@@ -64,8 +65,10 @@ router.beforeEach((to, from, next) => {
   
   // If route requires authentication and no token is found, redirect to login page
   if (to.matched.some(record => record.meta.requiresAuth) && !token) {
-    next({ name: 'Login' });
-    alert('Please login to get access.')
+    setTimeout(() => {
+      next({ name: 'Login' })
+    }, 1000);
+    showSnackbar('You are not logged in', 'error')
   } else {
     next();
   }

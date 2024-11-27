@@ -56,15 +56,16 @@ export const resolvers = {
       //returns bunch of null values for now since we are not using various fields keeping it as as for now.
       const userProfileData = {
         username: args.username,
-        firstname: args.firstname,
-        lastname: args.lastname,
+        //  firstname: args.firstname,
+        //lastname: args.lastname,
         age: args.age,
         email: args.email,
         gender: args.gender,
         number: args.number,
-        membership: args.membership,
+        membership: args.isPremium,
         userId: authResult.insertedId,
       };
+
 
       let userProfileResult = await dbRtns.addOne(
         db,
@@ -72,7 +73,7 @@ export const resolvers = {
         userProfileData
       );
 
-      return { user: authData };
+      return { user: authData, errorMessage:null };
     } catch (error) {
       // Handle any errors that occur
       console.error("Error occurred in fetching results:", error);
@@ -448,6 +449,52 @@ export const resolvers = {
       };
     } catch {
       console.log("Here is your error");
+    }
+  },
+  getUserSurvey: async () => {
+    try {
+      // Fetch user profile data using the user ID
+      const db = await dbRtns.getDBInstance();
+      const feedback = await dbRtns.findAll(db, "Feedback"); // Get all feedback
+
+      if (!feedback) {
+        throw new Error(
+          "Error in getUserSurver: Feedback could not be fetched."
+        );
+      }
+
+      // Create a Feedback object, like in the Schema
+      let stats = {
+        numTotalFeedback: feedback.length,
+        numAmazing: feedback.filter((u) => u.Label === "Amazing").length,
+        numGood: feedback.filter((u) => u.Label === "Good").length,
+        numOk: feedback.filter((u) => u.Label === "Ok").length,
+        numBad: feedback.filter((u) => u.Label === "Bad").length,
+        numAweful: feedback.filter((u) => u.Label === "Aweful").length,
+      };
+      return stats;
+    } catch (error) {
+      // Handle any errors that occur
+      console.error("Error occurred in calculating stats:", error);
+      throw new Error("Failed to calculate stats.");
+    }
+  },
+  addFeedback: async (args) => {
+    try {
+      // Get the database instance
+      const db = await dbRtns.getDBInstance();
+
+      const addFeedbackLabel = await dbRtns.addOne(db, "Feedback", {
+        Label: args.label,
+      });
+
+      if (!addFeedbackLabel) {
+        throw new Error("Failed to add Label");
+      }
+
+      return addFeedbackLabel.value;
+    } catch (error) {
+      console.error("Error occurred while updating profile picture", error);
     }
   },
 };

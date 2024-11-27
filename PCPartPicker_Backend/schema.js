@@ -14,6 +14,7 @@ type Query {
     getMotherboard: [motherboard]
     getBuildsByUser: [Build]
     getReviews: [Review]
+    getUserSurvey:UserSurvey
 },
 type User {
     id: ID
@@ -152,8 +153,19 @@ type Review{
     comment: String
     createdAt: String
 },
+type UserSurvey {
+    numTotalFeedback:Int,
+    numAmazing:Int,
+    numGood:Int,
+    numOk:Int,
+    numBad:Int,
+    numAweful:Int,
+},
+type feedback {
+    label:String
+ },
 type Mutation {
-    signup(username:String, email: String, age:String, membership:String, number: String,  password: String): AuthPayload
+    signup(username:String, email: String, password: String, isPremium: Boolean): AuthPayload
     login(email: String, password: String): AuthPayload
     saveBuild( userId: ID
     name: String

@@ -13,8 +13,8 @@
           <input type="password" id="password" v-model="password" required placeholder="Password" />
         </div>
         <div class="form-group checkbox-container">
-            <input type="checkbox" id="premium" v-model="isPremium" />
-            <label for="premium">Sign up as a Premium User</label>
+          <input type="checkbox" id="premium" v-model="isPremium" />
+          <label for="premium">Sign up as a Premium User</label>
         </div>
         <div class="button-container">
           <button type="submit" class="submit-button">Sign Up</button>
@@ -25,6 +25,12 @@
         Already have an account? <a href="/login" class="login-link">Login here</a>
       </p>
     </div>
+    <v-snackbar v-model="snackbar.show" :color="snackbar.color" :timeout="3000" location="top">
+      {{ snackbar.text }}
+      <template v-slot:actions>
+        <v-btn color="white" variant="text" @click="snackbar.show = false"> Close </v-btn>
+      </template>
+    </v-snackbar>
   </div>
 </template>
 
@@ -35,25 +41,36 @@ export default {
     return {
       username: '',
       email: '',
-      password: ''
-      isPremium: false // Track if the user is signing up as premium
+      password: '',
+      isPremium: false, // Track if the user is signing up as premium
+      snackbar: {
+        show: false,
+        text: '',
+        color: 'success'
+      }
     }
   },
   methods: {
     async handleSubmit() {
       const signUpMutation = `
       mutation($username:String, $email:String, $password:String, $isPremium: Boolean) 
-      {signup(username:$username,email:$email,password:$password, isPremium: $isPremium))
+      {signup(username:$username,email:$email,password:$password, isPremium: $isPremium)
         { 
           user{
               username,email
             }
+            errorMessage
           }
         }
     `
 
       const URL = 'http://localhost:3045/graphql'
-      const variables = { username: this.username, email: this.email, password: this.password, isPremium: this.isPremium }
+      const variables = {
+        username: this.username,
+        email: this.email,
+        password: this.password,
+        isPremium: this.isPremium
+      }
 
       try {
         // Send the login request to your GraphQL endpoint
@@ -69,17 +86,26 @@ export default {
         })
 
         const result = await response.json()
+        console.log(result)
 
         if (result.errors) {
-          alert(`Sign Up failed: ${result.errors[0].message}`)
+          this.snackbar.text = `Sign Up failed`
+          this.snackbar.color = 'error'
+          this.snackbar.show = true
         } else {
           const { user, errorMessage } = result.data.signup
 
           if (errorMessage) {
-            alert(`Signp error: ${errorMessage}`)
+            this.snackbar.text = `Signup error: ${errorMessage}`
+            this.snackbar.color = 'error'
+            this.snackbar.show = true
           } else {
-            // Redirect or take further actions after successful login
-            alert(`Sign Up successful: ${user.username}`)
+            this.snackbar.text = `Sign Up successful: ${user.username}`
+            this.snackbar.color = 'success'
+            this.snackbar.show = true
+            setTimeout(() => {
+              this.$router.push('/login')
+            }, 1000)
           }
         }
       } catch (error) {
@@ -204,7 +230,7 @@ input:focus {
   color: #8e44ad; /* Link color */
   text-decoration: underline;
 }
-  .checkbox-container {
+.checkbox-container {
   display: flex; /* Use flexbox to align checkbox and label */
   align-items: center; /* Center items vertically */
   margin-top: 10px; /* Space above the checkbox section */

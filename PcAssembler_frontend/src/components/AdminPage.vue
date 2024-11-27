@@ -15,7 +15,7 @@
               </v-card>
             </v-col>
           </v-row>
-          <div class="mt-12 pa-4 text-h5">User Feedback</div>
+          <div class="mt-12 pa-4 text-h5">User Feedback on Components</div>
           <v-row>
             <v-col v-for="review in reviews" :key="review._id" cols="12" md="6" lg="8">
               <v-card class="h-100">

@@ -12,6 +12,10 @@
         <div class="form-group">
           <input type="password" id="password" v-model="password" required placeholder="Password" />
         </div>
+        <div class="form-group checkbox-container">
+            <input type="checkbox" id="premium" v-model="isPremium" />
+            <label for="premium">Sign up as a Premium User</label>
+        </div>
         <div class="button-container">
           <button type="submit" class="submit-button">Sign Up</button>
           <button type="button" class="back-button" @click="goBack">Back</button>
@@ -32,13 +36,14 @@ export default {
       username: '',
       email: '',
       password: ''
+      isPremium: false // Track if the user is signing up as premium
     }
   },
   methods: {
     async handleSubmit() {
       const signUpMutation = `
-      mutation($username:String, $email:String, $password:String) 
-      {signup(username:$username,email:$email,password:$password)
+      mutation($username:String, $email:String, $password:String, $isPremium: Boolean) 
+      {signup(username:$username,email:$email,password:$password, isPremium: $isPremium))
         { 
           user{
               username,email
@@ -48,7 +53,7 @@ export default {
     `
 
       const URL = 'http://localhost:3045/graphql'
-      const variables = { username: this.username, email: this.email, password: this.password }
+      const variables = { username: this.username, email: this.email, password: this.password, isPremium: this.isPremium }
 
       try {
         // Send the login request to your GraphQL endpoint
@@ -198,5 +203,10 @@ input:focus {
 .login-link {
   color: #8e44ad; /* Link color */
   text-decoration: underline;
+}
+  .checkbox-container {
+  display: flex; /* Use flexbox to align checkbox and label */
+  align-items: center; /* Center items vertically */
+  margin-top: 10px; /* Space above the checkbox section */
 }
 </style>

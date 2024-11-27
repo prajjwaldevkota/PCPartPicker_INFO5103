@@ -9,6 +9,7 @@ import PartsBrowse from './components/PartsBrowse.vue';
 import PartReviews from './components/PartReviews.vue';
 import CartPage from './components/CartPage.vue';
 import { showSnackbar } from './snackbar';
+import AdminPage from './components/AdminPage.vue';
 
 const routes = [
   {
@@ -58,6 +59,11 @@ const routes = [
     path: '/cart',
     name: 'Cart Page',
     component: CartPage,
+  },
+  {
+    path: '/admin',
+    name: 'admin',
+    component: AdminPage,
     meta: {requiresAuth: true},
   },
 ];

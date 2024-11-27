@@ -34,12 +34,22 @@
           @click="$router.push('/about')"
           >About</v-btn
         >
+        <v-btn
+          :color="$route.path === '/admin' ? 'secondary' : 'white'"
+          text
+          @click="$router.push('/admin')"
+          >Admin</v-btn
+        >
         <v-btn 
-        :color="$route.path === '/cart' ? 'secondary' : 'white'"
-        icon @click="goToCart">       
-          <v-icon>mdi-cart</v-icon>
-      </v-btn>
-        <v-btn text @click="logout">Logout</v-btn>
+          :color="$route.path === '/cart' ? 'secondary' : 'white'"
+          icon @click="goToCart">       
+            <v-icon>mdi-cart</v-icon>
+        </v-btn>
+        <v-btn 
+          text 
+          @click="logout"
+          >Logout</v-btn
+        >
       </v-app-bar>
 
       <router-view />

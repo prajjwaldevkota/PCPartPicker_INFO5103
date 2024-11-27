@@ -214,6 +214,33 @@
               <div v-if="selectedPart.form_factor">Form Factor: {{ selectedPart.form_factor }}</div>
               <div v-if="selectedPart.interface">Interface: {{ selectedPart.interface }}</div>
             </div>
+                              
+                  <div style="margin-top: 20px;"><hr width="100%" size="2"></div>
+                      <div style="margin-top: 20px;"><h2>Buy options</h2></div>
+                      
+                    <div style="margin-top: 10px;">
+                        <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                          <span style="margin-right: 400px;">Amazon</span>
+                          <a href="https://www.amazon.com/AMD-Ryzen-7800X3D-16-Thread-Processor/dp/B0BTZB7F88/ref=sr_1_1?crid=2B0YN6L3MNUYD&dib=eyJ2IjoiMSJ9.hs8ZjhfxdFhr2YEgR9IZ3EyJThZ48gUK_JYeMoDUIrCdIKT6va3SLzddG4IHMQJ9NyFJvaOE8XhCQsJCQKRrtm_UP3i8cbY2Ro3XNc8GjAyekROej_VKrYX9jzXKW_QoyPF6c0XX1Q_5u1plrGbDZKPFa87d1UlkCjQWNrkLlg7ijGg0lIDn1RWepOh6CFolIbG1nEHgByUBLLJFcON_FhnmkzmkiFpLMH6LLbQkBHs.CMtogptoGEUuzVF0RJIcIwiIw62Xz-7TUvlH5_hIZfU&dib_tag=se&keywords=AMD+Ryzen+7+7800X3D&qid=1732417237&sprefix=amd+ryzen+7+7800x3d%2Caps%2C100&sr=8-1" target="_blank"><button class="buy-button">Buy</button></a>
+                    </div>
+                      
+                    <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                          <span style="margin-right: 400px;">Newegg</span>
+                          <a href="https://www.newegg.com" target="_blank"><button class="buy-button">Buy</button></a>
+                    </div>
+                      
+                    <div style="display: flex; align-items: center;">
+                          <span style="margin-right: 317px;">Canada Computers</span>
+                          <a href="https://www.canadacomputers.com" target="_blank"><button class="buy-button">Buy</button></a>
+                    </div>
+                    <div style="margin-top: 10px;"></div>
+                        <div style="display: flex; align-items: center;">
+                          <span style="margin-right: 395px;">Best Buy</span>
+                          <a href="https://www.bestbuy.com" target="_blank"><button class="buy-button">Buy</button></a>
+                    </div>
+                  </div>
+
+
             <v-divider class="my-4"></v-divider>
             <div class="d-flex align-center">
               <v-text-field
@@ -527,5 +554,35 @@ export default {
 .h-100 {
   height: 100%;
 }
+.buy-button {
+    background-color: #007bff; /* Blue color */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+  }
+
+  .buy-button:hover {
+    background-color: #0056b3; /* Darker blue when hovering */
+  }
+
+  .buy-button:active {
+    animation: button-click 0.3s forwards;
+  }
+
+  @keyframes button-click {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(0.9); /* Shrink the button */
+    }
+    100% {
+      transform: scale(1); /* Return to original size */
+    }
+  }
 
 </style>

@@ -333,7 +333,13 @@ export default {
     closeModal() {
       this.modalVisible = false // This will close the modal
     },
-
+    addToCart(part) {
+    const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
+    cart.push(part);
+    sessionStorage.setItem('cart', JSON.stringify(cart));
+    this.snackbarText = `${part.name} added to cart!`;
+    this.showSnackbar = true;
+  },
     logout() {
       sessionStorage.removeItem('token')
       this.$router.push('/login')

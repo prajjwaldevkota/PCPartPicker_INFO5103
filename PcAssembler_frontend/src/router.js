@@ -7,6 +7,7 @@ import NewBuildPage from './components/NewBuildPage.vue';
 import GuidePage from './components/GuidePage.vue';
 import PartsBrowse from './components/PartsBrowse.vue';
 import PartReviews from './components/PartReviews.vue';
+import CartPage from './components/CartPage.vue';
 import { showSnackbar } from './snackbar';
 
 const routes = [
@@ -51,6 +52,12 @@ const routes = [
     path: '/partreviews',
     name: 'Part Reviews',
     component: PartReviews,
+    meta: {requiresAuth: true},
+  },
+  {
+    path: '/cart',
+    name: 'Cart Page',
+    component: CartPage,
     meta: {requiresAuth: true},
   },
 ];

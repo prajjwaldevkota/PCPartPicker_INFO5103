@@ -446,6 +446,7 @@ export const resolvers = {
           adminName: admin.adminName,
           password: admin.password,
         },
+        errorMessage: message,
       };
     } catch {
       console.log("Here is your error");
@@ -481,6 +482,7 @@ export const resolvers = {
   },
   addFeedback: async (args) => {
     try {
+      console.log(args)
       // Get the database instance
       const db = await dbRtns.getDBInstance();
 

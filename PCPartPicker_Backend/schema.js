@@ -28,6 +28,7 @@ type User {
 type AuthPayload {
     token: String
     user: User
+    admin: Admin
     errorMessage: String 
 },
 type Admin {
@@ -194,5 +195,6 @@ type Mutation {
     createReview(componentName: String, componentType: String, rating: Int, comment: String): Review
     AdminSignup ( adminName: String,  password: String): AuthPayload
     AdminLogin (adminName:String , password:String): AuthPayload
+    addFeedback(label:String):feedback
 }
 `;

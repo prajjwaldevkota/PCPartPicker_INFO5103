@@ -28,28 +28,31 @@
           @click="$router.push('/partreviews')"
           >Part Reviews</v-btn
         >
-        <v-btn
-          :color="$route.path === '/about' ? 'secondary' : 'white'"
-          text
-          @click="$router.push('/about')"
-          >About</v-btn
-        >
-        <v-btn
+
+        <!-- <v-btn
           :color="$route.path === '/admin' ? 'secondary' : 'white'"
           text
           @click="$router.push('/admin')"
           >Admin</v-btn 
-        >
+        > -->
         <v-btn :color="$route.path === '/cart' ? 'secondary' : 'white'" icon @click="goToCart">
           <v-icon>mdi-cart</v-icon>
         </v-btn>
         <v-btn text @click="logout">Logout</v-btn>
       </v-app-bar>
+      <v-btn
+        :color="$route.path === '/about' ? 'secondary' : 'white'"
+        text
+        @click="$router.push('/about')"
+        >About</v-btn
+      >
       <router-view />
 
-      <v-dialog v-model="showLogoutModal" max-width="400">
+      <v-dialog v-model="showLogoutModal" max-width="500">
         <v-card>
-          <v-card-title class="text-center">Thanks for visiting! Please give us your feedback</v-card-title>
+          <v-card-title class="text-center"
+            >Thanks for visiting! Please give us your feedback</v-card-title
+          >
           <v-card-text>
             <div v-if="!submitted" class="text-center">
               <h3 class="mb-4">How was your experience?</h3>

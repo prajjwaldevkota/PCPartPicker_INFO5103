@@ -39,13 +39,13 @@
           <v-icon>mdi-cart</v-icon>
         </v-btn>
         <v-btn text @click="logout">Logout</v-btn>
+        <v-btn
+          :color="$route.path === '/about' ? 'secondary' : 'white'"
+          text
+          @click="$router.push('/about')"
+          >About</v-btn
+        >
       </v-app-bar>
-      <v-btn
-        :color="$route.path === '/about' ? 'secondary' : 'white'"
-        text
-        @click="$router.push('/about')"
-        >About</v-btn
-      >
       <router-view />
 
       <v-dialog v-model="showLogoutModal" max-width="500">

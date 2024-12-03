@@ -361,6 +361,14 @@ export default {
       this.modalVisible = false // This will close the modal
     },
     addToCart(part) {
+    const token = sessionStorage.getItem('token'); // Check if the user is logged in
+    if (!token) {
+      this.snackbarText = "You need to log in to add items to the cart!";
+      this.snackbarColor = "error";
+      this.showSnackbar = true;  // Show snackbar if not logged in
+      return; 
+    }
+
     const cart = JSON.parse(sessionStorage.getItem('cart')) || [];
     cart.push(part);
     sessionStorage.setItem('cart', JSON.stringify(cart));
